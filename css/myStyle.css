@@ -1,0 +1,29 @@
+.to-top {
+    display: none;
+    color: #fff;
+}
+
+:root {
+    --theme-hue: random(0, 255);
+    --cover-button-border: 1px solid black;
+    --cover-button-color: black;
+    --cover-button-primary-color: rgb(255, 255, 255);
+    --cover-button-primary-background: black;
+    --cover-heading-color: black;
+    --blockquote-border-color:#e671ee;
+    --code-inline-color:rgb(201, 114, 57);
+}
+
+.cover .cover-main>p:last-child a:hover {
+    color: #ffff;
+    background: hsla(0, 0%, 37%, 0.387);
+}
+
+.cover h1 span {
+    font-weight: bold;
+}
+
+.cover .cover-main>p:last-child a:first-child:hover {
+    color: black;
+    background: hsla(0, 0%, 0%, 0.387);
+}
