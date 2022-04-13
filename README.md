@@ -1,5 +1,5 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold">幹</h1>
+<p style="text-align:center;"><img src="image/go.png" width="10%" align="middle" /></p>
 
 <style>
     #btn{

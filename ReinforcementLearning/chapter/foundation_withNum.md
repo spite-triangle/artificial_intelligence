@@ -27,11 +27,11 @@
 
 1. 角色根据「决策函数 $\pi(a|s)$ 」在当前环境状态下选择一个动作
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/agentEnvironment1.jpg" align="middle" width="75%"/></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/agentEnvironment1.jpg" align="middle" width="75%"/></p>
 
 2. 环境受到角色动作的影响进入下一个状态，并对角色的动作给出奖励。环境也根据「状态转移函数 $p(s'|s,z)$」进入下一个状态
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/agentEnvironment2.jpg" align="middle" width="75%"/></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/agentEnvironment2.jpg" align="middle" width="75%"/></p>
 
 3. 重复上述步骤
 
@@ -39,11 +39,11 @@
 
 - **动作的随机性**：角色在当前状态下，会采取什么动作是随机的
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/randomness_action.jpg" width="50%" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/randomness_action.jpg" width="50%" /></p>
 
 - **状态转移的随机性**：角色做出一个动作后，环境状态的变化是随机的
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/randomness_state.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/randomness_state.jpg" width="50%" align="middle" /></p>
 
 
 # 3. 奖励、回报、价值函数
@@ -113,4 +113,4 @@ $$
     2. 根据最优动作价值函数 $Q^*$：$a_t = argmax_a Q^*(s_t,a)$
 
 - **学习的过程**：不断的重复 $(s_i,a_i,r_i)$ 的过程，最终实现奖励的最大化。
-    <p style="text-align:center;"><img src="../../image/reinforceLearning/process_learning.jpg" width="100%" align="middle" /></p>
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/process_learning.jpg" width="100%" align="middle" /></p>

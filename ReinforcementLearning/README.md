@@ -1,7 +1,8 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold">强化学习</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">强化学习</h1>
 
 <style>
+
     #btn{
         background-color: #FF1D1D;
         margin-left: 20px;

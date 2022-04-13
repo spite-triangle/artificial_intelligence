@@ -13,7 +13,7 @@
 
 # 2. 神经网络的构造
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/example_policy_idea.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/example_policy_idea.jpg" width="75%" align="middle" /></p>
 
 1. 一张游戏画面当作一个「状态」，状态通过「卷积层」实现特征提取
 2. 特征输入给「权连接层」进行 $\pi(a|s)$ 拟合

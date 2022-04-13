@@ -22,7 +22,7 @@
 **形式**：利用一个表格来记录 $Q
 _\pi(s,a)$，行为状态 $s$，列为动作 $a$。 
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
 
 
 **算法：**
@@ -32,11 +32,13 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 4. TD误差：$\delta_t = Q_\pi (s_t,a_t) - y_t$
 5. 更新 $Q_\pi$：$Q_\pi(s_t,a_t) = Q_\pi(s_t,a_t) - \alpha \delta_t$
 
+> [sarsa 案例](example\reinforcementLearning\findWay_Sarsa)
+
 ## 1.3. 神经网络形式
 
 **思路：** 利用神经网络 $q(s,a;w)$ 来近似动作价值函数 $Q_\pi(s,a)$。<span style="color:red;font-weight:bold"> 输入为状态，输出为各个动作对应的价值 </span>
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/example_sarsa.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/example_sarsa.jpg" width="75%" align="middle" /></p>
 
 **算法：**
 1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$
@@ -64,7 +66,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 
 **形式**：利用一个表格来记录 $Q^*(s,a)$，行为状态 $s$，列为动作 $a$。 
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
 
 
 1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$
@@ -72,11 +74,14 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 3. TD误差：$\delta_t = Q^*(s_t,a_t) - y_t$
 4. 更新 $Q_\pi$：$Q^*(s_t,a_t) = Q^*(s_t,a_t) - \alpha \delta_t$
 
+> [Q Learning 案例](example\reinforcementLearning\findWay_QLearning\QLearning.py)
+
+
 ## 2.3. 神经网络形式
 
 **思路：** 利用神经网络 $Q(s,a;w)$ 来近似动作价值函数 $Q^*(s,a)$。
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/example_dqn.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/example_dqn.jpg" width="75%" align="middle" /></p>
 
 **算法：**
 1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$

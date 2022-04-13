@@ -9,7 +9,7 @@
 2. 用于训练的 $(s_t,a_t,r_t,s_{t+1})$ 具有较强的相关性（$s_t$训练完，就使用 $s_{t+1}$），这种相关性是有害的
 
 **经验回放（experience replay）：** 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/replayBuffer.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/replayBuffer.jpg" width="75%" align="middle" /></p>
 
 1. 将每一次 $(s_t,a_t,r_t,s_{t+1})$ 都放入一个「回放缓冲区`replay buffer`」中。缓冲区大小一定，存满后，就进行入队和出队
 2. 利用「随机梯度`SGD`」进行模型的更新：<span style="color:red;font-weight:bold"> 从回放缓冲区中，随机抽取一项进行模型更新计算 </span>
@@ -17,7 +17,7 @@
 ## 1.2. 优先经验回放
 
 **原因：** 角色对于常规的游戏环境会在「回放缓冲区」中存放大量的经验，而对于BOSS关卡的经验却很少。对于经验回放，若采用均匀抽样，就会导致对BOSS关卡的学习机会变少。
-<p style="text-align:center;"><img src="../../image/reinforceLearning/replayProblem.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/replayProblem.jpg" width="75%" align="middle" /></p>
 
 **优先经验回放：** 对于特殊状态（例如BOSS关卡），增加其被抽中学习的概率。
 1. **实现方法：** $|\delta_t|$ 越大，被抽中的概率越大
@@ -30,7 +30,7 @@
    - 初始值设置为最大值。因为状态只有进行一次学习计算后才能知道结果
    - 每一次学习后，更新对于状态的 $|\delta_t|$
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/import_replay.jpg" width="75%" align="middle" /></p>  
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/import_replay.jpg" width="75%" align="middle" /></p>  
 
 # 2. 高估问题
 
@@ -60,7 +60,7 @@ $$
 
 由于DQN对于 $Q(s,a;w)$ 的高估并非均匀的，这就导致最后的预测结果大小关系的改变。这就导致「动作」的选择，可能是错误的。
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/overestimation.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/overestimation.jpg" width="75%" align="middle" /></p>
 
 
 ## 2.3. 目标网络
@@ -138,7 +138,7 @@ $$
 
 # 4. 网络结构
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/duelingNetwork.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/duelingNetwork.jpg" width="75%" align="middle" /></p>
 
 1. 对 $A^*(s,a)$ 与 $V^*(s)$ 分别采用神经网络进行近似
     - `Dense1`：近似 $A^*(s,a)$，即 $A(s,a;w^A)$

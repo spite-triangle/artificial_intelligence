@@ -1,5 +1,5 @@
 
-<h1 style="text-align:center;font-size:60px;font-weight:bold">深度学习</h1>
+<h1 style="text-align:center;font-size:60px;font-weight:bold;font-family:宋体">深度学习</h1>
 
 <style>
     #btn{

@@ -24,7 +24,7 @@ MAZE[2][5] = TRAP_VAL
 MAZE[1][2] = TRAP_VAL
 MAZE[3][3] = TRAP_VAL
 MAZE[6][6] = TRAP_VAL
-MAZE[4][1] = TRAP_VAL
+MAZE[4][4] = TRAP_VAL
 MAZE[7][6] = TRAP_VAL
 MAZE[4][2] = TRAP_VAL
 MAZE[2][4] = TRAP_VAL
@@ -148,7 +148,7 @@ class Controller():
             done = True
         # 到达目标
         elif MAZE[self.agentRow][self.agentCol] == TARGET_VAL:         
-            reward = 1
+            reward = 5
             done = True
 
         return reward,done
