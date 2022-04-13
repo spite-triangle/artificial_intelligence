@@ -32,9 +32,11 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 4. TD误差：$\delta_t = Q_\pi (s_t,a_t) - y_t$
 5. 更新 $Q_\pi$：$Q_\pi(s_t,a_t) = Q_\pi(s_t,a_t) - \alpha \delta_t$
 
-> [sarsa 案例](example\reinforcementLearning\findWay_Sarsa)
 
-## 神经网络形式
+- <a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/reinforcementLearning/findWay_Sarsa" class="jump_link"> Sarsa 案例 </a>
+
+
+## 神经网络形式 
 
 **思路：** 利用神经网络 $q(s,a;w)$ 来近似动作价值函数 $Q_\pi(s,a)$。<span style="color:red;font-weight:bold"> 输入为状态，输出为各个动作对应的价值 </span>
 
@@ -74,8 +76,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 3. TD误差：$\delta_t = Q^*(s_t,a_t) - y_t$
 4. 更新 $Q_\pi$：$Q^*(s_t,a_t) = Q^*(s_t,a_t) - \alpha \delta_t$
 
-> [Q Learning 案例](example\reinforcementLearning\findWay_QLearning\QLearning.py)
-
+- <a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/reinforcementLearning/findWay_QLearning" class="jump_link"> Q Learning 案例 </a>
 
 ## 神经网络形式
 
