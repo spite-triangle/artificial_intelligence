@@ -2,20 +2,23 @@
 import numpy as np
 import pandas as pd
 
-class Sarsa():
-    def __init__(self,gamma: float = 0.9,alpha:float=0.01,epsilon:float=0.9):
+class SarsaLambda():
+    def __init__(self,gamma: float = 0.9,alpha:float=0.01,epsilon:float=0.9,lambd: float=0.9):
         # Q 表
         self.qTable:pd.DataFrame = pd.DataFrame(columns=['r','l','u','d'])
+        self.eTable = self.qTable.copy()
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon
+        self.lambd = lambd 
         pass
     
     # NOTE - 由于不知道决策函数pi的真实，还是通过和Q Learnig一样的方法选择动作
     def chooseAction(self,state:int):
         """产生下一个动作"""
         # Q表的状态索引
-        self.checkState(state)
+        self.checkState(self.qTable,state)
+        self.checkState(self.eTable,state)
 
         dice = np.random.random()
         if dice < self.epsilon:
@@ -30,11 +33,10 @@ class Sarsa():
 
         return act
 
-    # NOTE - sarsa 比 Q learning 多了一个参数 nextAct，因为更新 Q 表需要知道下一动作
     def learn(self,curAct:str,curState:int,reward:int,nextAct:str,nextState:int,done: bool):
         """更新Q表"""
-        self.checkState(curState)
-        self.checkState(nextState)
+        self.checkState(self.qTable,nextState)
+        self.checkState(self.eTable,nextState)
 
         # 是否结束
         if done == True:
@@ -42,15 +44,22 @@ class Sarsa():
         else:
             # Q Learning 中 TD 目标的计算方式：
             # yt = reward + self.gamma * self.qTable.loc[nextState,:].max()
-            # NOTE - Q Learning 是下一状态的「最大动作价值」；sarsa 是在下一个状态下所执行的动作
             yt = reward + self.gamma * self.qTable.loc[nextState,nextAct]
 
-        self.qTable.loc[curState,curAct] -= self.alpha * (self.qTable.loc[curState,curAct] - yt) 
+        delta = self.qTable.loc[curState,curAct] - yt
+
+        self.eTable.loc[curState,:]  *= 0
+        self.eTable.loc[curState,curAct] = 1
+
+        self.qTable -=  self.alpha * delta * self.eTable
+
+        self.eTable *= self.lambd * self.gamma
 
 
-    def checkState(self,index: int):
-        if index not in self.qTable.index:
-            self.qTable.loc[index] = [0,0,0,0]
+    def checkState(self,table:pd.DataFrame,index: int):
+        if index not in table.index:
+            table.loc[index] = [0,0,0,0]
+
 
 if __name__ == "__main__":
     dqn = QLearning()

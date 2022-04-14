@@ -118,7 +118,7 @@ class Controller():
         self.agentRow = 0
         self.agentCol = 0
 
-        self.actionTable = {'r':Action(1,0),'l':Action(-1,0),'u':Action(0,-1),'d':Action(0,1)}
+        self.actionTable = {'r':Action(0,1),'l':Action(0,-1),'u':Action(-1,0),'d':Action(1,0)}
 
     def reset(self):
         """程序重置"""
@@ -140,15 +140,17 @@ class Controller():
         # 超界
         if self.agentRow >= MAZE_SIZE or self.agentRow < 0:
             self.agentRow -= self.actionTable[action].row
+            reward = -1
         elif self.agentCol >= MAZE_SIZE or self.agentCol < 0:
             self.agentCol -= self.actionTable[action].col
+            reward = -1
         # 掉入陷阱
         elif MAZE[self.agentRow][self.agentCol] == TRAP_VAL:
             reward = -1
             done = True
         # 到达目标
         elif MAZE[self.agentRow][self.agentCol] == TARGET_VAL:         
-            reward = 1
+            reward = 10
             done = True
 
         return reward,done
@@ -159,7 +161,7 @@ class Controller():
 
 
     def render(self):
-        time.sleep(0.05)
+        time.sleep(0.02)
         # 实际移动
         self.app.agentMoveRender(self.agentRow,self.agentCol)
         self.app.master.update()
@@ -168,6 +170,8 @@ class Controller():
         self.app.updataCount(count)
 
 def update():
+    env_ctrl.agentMove('r')
+    env_ctrl.render()
     root.after(100,update)
     
 
@@ -178,6 +182,6 @@ if(__name__ == "__main__"):
     root.resizable(False, False) #横纵均不允许调整
     app = Environment(root)
     env_ctrl = Controller(app)
-    root.after(1000,update)
+    root.after(100,update)
     root.mainloop()
 

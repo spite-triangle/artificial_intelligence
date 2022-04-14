@@ -1,4 +1,4 @@
-from Sarsa import Sarsa
+from SarsaLambda import SarsaLambda
 from environment_findWay import Controller,Environment
 import tkinter as tk
 
@@ -17,6 +17,9 @@ def train():
         nextState  = env_ctrl.getState()
         # 初始化第一个动作
         nextAct = agent_ctrl.chooseAction(nextState) 
+
+        # 将轨迹表重置
+        agent_ctrl.eTable *= 0
 
         while True:
 
@@ -43,13 +46,12 @@ def train():
 
 
 
-
 if __name__ == '__main__':
     root = tk.Tk()
     root.title = "Q Learning Maze"
     root.resizable(False, False) #横纵均不允许调整
     env = Environment(root)
     env_ctrl = Controller(env)
-    agent_ctrl = Sarsa()
+    agent_ctrl = SarsaLambda()
     root.after(100,train)
     root.mainloop()

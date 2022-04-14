@@ -3,10 +3,9 @@ import numpy as np
 import pandas as pd
 
 class QLearning():
-    def __init__(self,gamma: float = 0.9,alpha:float=0.01,epsilon:float=0.9):
+    def __init__(self,gamma: float = 0.9,alpha:float=0.1,epsilon:float=0.9):
         # Q 表
         self.qTable:pd.DataFrame = pd.DataFrame(columns=['r','l','u','d'])
-        self.qTable.append(pd.Series([1,2,3,4,5]),ignore_index=True)
         self.gamma = gamma
         self.alpha = alpha
         self.epsilon = epsilon

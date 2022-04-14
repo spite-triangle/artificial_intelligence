@@ -150,7 +150,7 @@ class Controller():
             done = True
         # 到达目标
         elif MAZE[self.agentRow][self.agentCol] == TARGET_VAL:         
-            reward = 10
+            reward = 100
             done = True
 
         return reward,done

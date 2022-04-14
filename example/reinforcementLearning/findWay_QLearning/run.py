@@ -6,7 +6,7 @@ import tkinter as tk
 
 def train():
     # 一轮游戏
-    count = 50
+    count = 100
     for i in range(count):
         # 环境重置
         env_ctrl.reset() 
@@ -20,6 +20,7 @@ def train():
 
             # 选择一个动作
             curAct = agent_ctrl.chooseAction(curState) 
+
             
             # 执行动作，获得奖励
             reward,done = env_ctrl.agentMove(curAct)
