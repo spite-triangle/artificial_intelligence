@@ -50,7 +50,7 @@
         text-align:center;
         border-radius: 10px; 
         margin-bottom: 5px;
-        width:inherit;
+        width:100%;
         height:80px;
 
         /* 显示为盒子，为了居中 */
