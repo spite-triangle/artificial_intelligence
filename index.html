@@ -7,17 +7,21 @@
   <link href="image/icon.png" rel="icon" type="image/x-ico">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css" title="Simple">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css"
+    title="Simple">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
-  <link rel="stylesheet" type="text/css" href="css/myStyle.css"/>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/spite-triangle/docsify-terminal@1.0.0/css/term.css"/>
+  <link rel="stylesheet" type="text/css" href="css/custom.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdn.jsdelivr.net/gh/spite-triangle/docsify-terminal@1.0.0/css/term.css" />
   <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/spite-triangle/docsify-codeLineNum@1.0.0/css/codeLineNum.css" />
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/themes/vue.css"> -->
 
   <!-- <link href="https://cdn.bootcss.com/KaTeX/0.10.0/katex.min.css" rel="stylesheet"> -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"/> 
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css" />
 
   </style>
 
@@ -39,7 +43,9 @@
       loadNavbar: true,
       coverpage: true,
       subMaxLevel: 2,
-
+      codeLineNum: {
+        blacklist: ['term']
+      },
       count: {
         countable: true,
         position: 'top',
@@ -63,25 +69,21 @@
           words: "",
           minute: ""
         },
-        isExpected: true
+        isExpected: true,
+
       }
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
-
-
-
-
-  <!-- <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script> -->
-
   <script src="https://unpkg.com/docsify-plugin-flexible-alerts"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//unpkg.com/docsify-count/dist/countable.min.js"></script>-->
+  <script src="//unpkg.com/docsify-count/dist/countable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-example-panels"></script>
 
   <!-- 语法高亮要更新最新版的:https://cdn.jsdelivr.net/npm/prismjs@1.25.0/ -->
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.25.0/components/prism-python.js"></script>
@@ -100,6 +102,8 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/gh/spite-triangle/docsify-terminal@1.0.0/script/term.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/gh/spite-triangle/docsify-codeLineNum@1.0.0/script/codeLineNum.min.js"></script>
 
 </body>
 

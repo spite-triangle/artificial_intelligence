@@ -1,5 +1,7 @@
 # 基础操作
 
+<a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/foundation" class="jump_link"> 本章测试程序 </a>
+
 # 1. OpenCV安装
 
 1. 安装 <a href="https://www.anaconda.com/" class="jump_link"> Anaconda </a>
@@ -117,8 +119,9 @@ img + img
 cv2.add(img,img)
 cv2.addWeighted(imgA, alpha, imgB, beta, gamma)
 
-# 黑色图片
+# 纯色图片
 blackImage = np.zeros(shape=(380,640,3),dtype=np.uint8)
+whiteImage = np.full(shape=(10,10,4),fill_value=255,dtype=np.uint8)
 ```
 
 - **图像相加：**
@@ -144,18 +147,18 @@ ret,destImg = cv2.threshold(img,threshVal,maxVal,flags)
 
 - **图像阈值类型：** 
   - `cv2.THRESH_BINARY`：
-    - `> threshVal`：通道值大于阈值时，取值为`maxVal`
-    - `< threshVal`：通道值大于阈值时，取值为`0`
+    - \> threshVal：通道值大于阈值时，取值为`maxVal`
+    - < threshVal：通道值大于阈值时，取值为`0`
   - `cv2.THRESH_BINARY_INV`：计算方式与上面相反
   - `cv2.THRESH_TOZERO`：
-      - `> threshVal`：通道值大于阈值时，不变
-      - `< threshVal`：通道值大于阈值时，取值为`0`
+      - \> threshVal：通道值大于阈值时，不变
+      - < threshVal：通道值大于阈值时，取值为`0`
   - `cv2.THRESH_TOZERO_INV`：计算方式与上面相反
   - `cv2.THRESH_TRUNC`：
-      - `> threshVal`：通道值大于阈值时，取值为`maxVal`
-      - `< threshVal`：通道值大于阈值时，不变
+      - \> threshVal：通道值大于阈值时，取值为`maxVal`
+      - < threshVal：通道值大于阈值时，不变
 
-  <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/threshold_categories.jpg" width="50%" align="middle" /></p>
+  <p style="text-align:center;"><img src="../../image/computerVision/threshold_categories.jpg" width="50%" align="middle" /></p>
 
 ## 3.3. 修改像素尺寸
 
@@ -185,7 +188,7 @@ destImage = cv2.copyMakeBorder(src: Mat,
   - `BORDER_WRAP`:外包装法，abcd | abcd | abcd ，重复原图
   - `BORDER_CONSTANT`:常量法，边界用常数值填充。111 | abcd | 111
 
-  <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/makeBorder_categories.jpg" width="50%" align="middle" /></p>
+  <p style="text-align:center;"><img src="../../image/computerVision/makeBorder_categories.jpg" width="50%" align="middle" /></p>
 
 # 4. 视频的基本操作
 
@@ -343,7 +346,4 @@ cv2.destroyAllWindows()
 > [!note|style:flat]
 > 只有在`cv2.imshow()`中显示了一张「像素图片」后，`mouse_callback`中的`(x,y)`才能正确的输出鼠标的位置坐标值。
 
-# 6. 附录
-
-<a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/foundation" class="jump_link"> 本章测试程序 </a>
 

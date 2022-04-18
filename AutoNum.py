@@ -112,6 +112,10 @@ def create_lines_with_number(lines_in_file):
             filterTitle = True
             continue
 
+        # 到附录结束
+        if(len( title_sign ) > 1 and '附录' in title_sign[1]):
+            break
+
         if title_sign[0] in headline:
             lines_in_file[i] = add_number_for_line(lines_in_file[i],title_sign[0])
     return lines_in_file
@@ -157,7 +161,7 @@ else:
     file_name = sys.argv[1]
 
 
-# file_name = "./test.md"
+
 if os.path.exists(file_name):
     with open(file_name,'r',encoding='utf-8') as f:
         create_markdown_file_with_number(f,file_name)

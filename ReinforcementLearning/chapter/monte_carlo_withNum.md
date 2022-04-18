@@ -4,7 +4,7 @@
 
 ## 1.1. 采样法
 
-<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/calculating_pi_1.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="../../image/reinforceLearning/calculating_pi_1.jpg" width="50%" align="middle" /></p>
 
 从图中可知：矩形的面积为 $A_r = 4$，圆的面积为 $A_c = \pi$。现在在矩形框内随机的抽取采样点（**均匀抽样**），那么采样点位于圆内的概率就为 $p = \frac{A_c}{A_r} =\frac{\pi}{4}$。
 
@@ -16,7 +16,7 @@
 
 ## 1.2. Buffon针问题
 
-<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/calculating_pi_buffon.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="../../image/reinforceLearning/calculating_pi_buffon.jpg" width="50%" align="middle" /></p>
 
 所有的针都一摸一样，针与纸相交的概率就为 $P = \frac{2l}{\pi d}$。这样根据`monte carlo`就计算 $\pi$。
 
