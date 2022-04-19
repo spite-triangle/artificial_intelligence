@@ -5,7 +5,7 @@
 
 # 1. TrackBar
 
-<p style="text-align:center;"><img src="../../image/computerVision/trackbar.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/trackbar.jpg" width="75%" align="middle" /></p>
 
 ```python
 import cv2
@@ -84,7 +84,7 @@ cv2.destroyAllWindows()
    ```
 - **传参数注意：**
     - `LineType`：该值控制的是「抗锯齿」效果，值越大，线条越光滑。取值通常为 $2^n$
-        <p style="text-align:center;"><img src="../../image/computerVision/lineType.jpg" width="25%" align="middle" /></p>
+        <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/lineType.jpg" width="25%" align="middle" /></p>
 
     - `pt`： <span style="color:red;font-weight:bold"> 所有点的坐标表示为 （横向坐标，纵线坐标） </span>
     - `color`：**通道为 (B,G,R)**
@@ -121,7 +121,7 @@ fillPoly(img, [pts], color[, lineType[, shift[, offset]]]) -> img
 
 <!-- div:right-panel -->
 
-<p style="text-align:center;"><img src="../../image/computerVision/polylines.jpg" width="60%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/polylines.jpg" width="60%" align="middle" /></p>
 
 <!-- panels:end -->
 
@@ -146,7 +146,7 @@ putText(img, text, pos:tuple, fontfamily, fontScale,
 
 <!-- div:right-panel -->
 
-<p style="text-align:center;"><img src="../../image/computerVision/font_pos.jpg" width="60%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/font_pos.jpg" width="60%" align="middle" /></p>
 
 <!-- panels:end -->
 
@@ -179,7 +179,7 @@ canvas = np.array(canvasBg)
 
 ```
 <!-- div:right-panel -->
-<p style="text-align:center;"><img src="../../image/computerVision/zh.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/zh.jpg" width="75%" align="middle" /></p>
 <!-- panels:end -->
 
 

@@ -22,7 +22,7 @@
 **形式**：利用一个表格来记录 $Q
 _\pi(s,a)$，行为状态 $s$，列为动作 $a$。 
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
 
 
 **算法：**
@@ -44,7 +44,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
     1. Sarsa 算法对于 $Q_{\pi}$ 更新，为单步更新，角色动一次便更新一次 $Q_{\pi}$，这就导致一回合游戏结束后，回顾寻宝「轨迹」，发现在宝藏附近的状态的 $Q_{\pi}$ 才与宝藏关系密切，而前往宝藏之前的轨迹状态则认为与宝藏无关。这就会导致 Sarsa 要在同样的轨迹上重复多次，进行 $Q_{\pi}$ 的更新，才能得到较好的 $Q_{\pi}$，**前提是找到宝藏的情况下，前期没有找到时，决策的随机数得大一些**
     2. 角色可能在前进的轨迹上转圈（在某几个状态上来回切换）
 
-    <p style="text-align:center;"><img src="../../image/reinforceLearning/sarsa_process.jpg" width="75%" align="middle" /></p>
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/sarsa_process.jpg" width="75%" align="middle" /></p>
 
 - **解决思路：** 
     1. 利用多组状态对 $Q_{\pi}$ 进行更新，增强轨迹上各个状态与宝藏的关联性
@@ -52,18 +52,18 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 
 ### 1.3.2. Sarsa($\lambda$) 的实现
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/sarsa_lambda.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/sarsa_lambda.jpg" width="75%" align="middle" /></p>
 
 - **状态个数：** 利用多少个状态对 $Q_{\pi}$ 进行更新，这里的取值范围为 `1 ~ n`（n：表示一回合结束时，轨迹所包含状态的个数），但是由于我们不会真的一回合才进行更新，所以并不知道一回合会有多少状态。**因此，可以将状态个数映射到 [0,1]，0：表示`1`个状态；1：表示`n`个状态，而我们用于Sarsa更新，使用的状态个数为 $\lambda \in [0,1]$，所以该算法就称之为 Sarsa($\lambda$)**
 
 - **状态标记：** 
     1. 一回合中，每个被经过的状态的标记值都会被记录，放到一个`eligibility_trace`表中
     2. 每个状态被经过一次，将会被标记，标记会随时间衰减
-        <p style="text-align:center;"><img src="../../image/reinforceLearning/sarsa_eligibility.png" width="25%" align="middle" /></p>
+        <p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/sarsa_eligibility.png" width="25%" align="middle" /></p>
     3. 当一个状态被多次经过时，对于标记值的处理方式有两种
        - 标记值直接叠加
        - 标记值限幅
-        <p style="text-align:center;"><img src="../../image/reinforceLearning/sarsa_stateAction.png" width="50%" align="middle" /></p>
+        <p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/sarsa_stateAction.png" width="50%" align="middle" /></p>
 
 - **算法流程**：每一轮游戏的开始前，都会将轨迹表归零，$E = 0$
   1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$
@@ -80,7 +80,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 
 ### 1.3.3. Sarsa($\lambda$) 解释
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/sarsa_trace.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/sarsa_trace.png" width="75%" align="middle" /></p>
 
 - **`e4`时刻的$Q_\pi$ 更新：**
 
@@ -153,7 +153,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 
 **思路：** 利用神经网络 $q(s,a;w)$ 来近似动作价值函数 $Q_\pi(s,a)$。<span style="color:red;font-weight:bold"> 输入为状态，输出为各个动作对应的价值 </span>
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/example_sarsa.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/example_sarsa.jpg" width="75%" align="middle" /></p>
 
 **算法：**
 1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$
@@ -181,7 +181,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 
 **形式**：利用一个表格来记录 $Q^*(s,a)$，行为状态 $s$，列为动作 $a$。 
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/Q_table.jpg" width="75%" align="middle" /></p>
 
 
 1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$
@@ -195,7 +195,7 @@ _\pi(s,a)$，行为状态 $s$，列为动作 $a$。
 
 **思路：** 利用神经网络 $Q(s,a;w)$ 来近似动作价值函数 $Q^*(s,a)$。
 
-<p style="text-align:center;"><img src="../../image/reinforceLearning/example_dqn.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/reinforceLearning/example_dqn.jpg" width="75%" align="middle" /></p>
 
 **算法：**
 1. 观测一次状态：$(s_t,a_t,r_t,s_{t+1})$

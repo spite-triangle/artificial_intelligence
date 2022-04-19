@@ -3,7 +3,7 @@
 
 # 1. 色彩空间
 
-<p style="text-align:center;"><img src="../../image/computerVision/pixel.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/pixel.jpg" width="50%" align="middle" /></p>
 
 图片放大后，就是由带有不同「颜色」的「像素块」所构成。**色彩空间就是描述每个像素块的颜色在数学上应该怎么表示**。
 
@@ -19,7 +19,7 @@
 
 <!-- div:right-panel -->
 
-<p style="text-align:center;"><img src="../../image/computerVision/rgb.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/rgb.jpg" width="50%" align="middle" /></p>
 
 <!-- panels:end -->
 
@@ -38,7 +38,7 @@ HSV 模型的像素点也是通过一个「三维向量」进行表示：
 
 <!-- div:right-panel -->
 
-<p style="text-align:center;"><img src="../../image/computerVision/hsv.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/hsv.jpg" width="75%" align="middle" /></p>
 
 <!-- panels:end -->
 
@@ -64,7 +64,7 @@ $$
 
 ## 1.3. HSL 模型
 
-<p style="text-align:center;"><img src="../../image/computerVision/HSL%20与%20HSV.jpg" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/HSL%20与%20HSV.jpg" width="50%" align="middle" /></p>
 
 整个形式和 HSV 类似
 - `Hue`：色相，与 HSV 一样
@@ -113,9 +113,9 @@ $$
 - **色彩空间压缩：** 一共有 4 个像素，每个像素都有3个通道值表示颜色，一个通道为一个字节，那么所有数据一共就有`4 x 3 x 1B = 12B`。现在通过 YUV 模型对图片进行压缩，丢掉一半的颜色信息，Y 通道全部保留`4 x 1B = 4B`，UV 通道丢弃一半就是`2 x 4 x 1B / 2 = 4B`，最后数据大小就为`4B + 4B = 8B`。
 - **采样方式：** 对于 Y 全部保留，对 UV 进行不同程度的取舍。
 
-    <p style="text-align:center;"><img src="../../image/computerVision/YUV_sample.jpg" width="50%" align="middle" /></p>
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/YUV_sample.jpg" width="50%" align="middle" /></p>
 
-    <p style="text-align:center;"><img src="../../image/computerVision/YUV_example.jpg" width="50%" align="middle" /></p>
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/YUV_example.jpg" width="50%" align="middle" /></p>
 
 - **RGB与YUV转换：**
     $$
@@ -148,7 +148,7 @@ $$
 Y = 0.299 R + 0.587 G + 0.114 B
 $$
 
-<p style="text-align:center;"><img src="../../image/computerVision/y_gray.jpg" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/y_gray.jpg" width="75%" align="middle" /></p>
 
 <details>
 <summary><span class="details-title">Python 程序</span></summary>

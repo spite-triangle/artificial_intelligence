@@ -158,7 +158,7 @@ ret,destImg = cv2.threshold(img,threshVal,maxVal,flags)
       - \> threshVal：通道值大于阈值时，取值为`maxVal`
       - < threshVal：通道值大于阈值时，不变
 
-  <p style="text-align:center;"><img src="../../image/computerVision/threshold_categories.jpg" width="50%" align="middle" /></p>
+  <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/threshold_categories.jpg" width="50%" align="middle" /></p>
 
 ## 3.3. 修改像素尺寸
 
@@ -188,7 +188,7 @@ destImage = cv2.copyMakeBorder(src: Mat,
   - `BORDER_WRAP`:外包装法，abcd | abcd | abcd ，重复原图
   - `BORDER_CONSTANT`:常量法，边界用常数值填充。111 | abcd | 111
 
-  <p style="text-align:center;"><img src="../../image/computerVision/makeBorder_categories.jpg" width="50%" align="middle" /></p>
+  <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/makeBorder_categories.jpg" width="50%" align="middle" /></p>
 
 # 4. 视频的基本操作
 
