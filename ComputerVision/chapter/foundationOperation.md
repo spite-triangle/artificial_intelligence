@@ -114,51 +114,11 @@ g = img[:,:,1] * 0
 r = img[:,:,2] * 0
 imgB = cv2.merge((b,g,r)) 
 
-# 图像直接相加
-img + img
-cv2.add(img,img)
-cv2.addWeighted(imgA, alpha, imgB, beta, gamma)
-
 # 纯色图片
 blackImage = np.zeros(shape=(380,640,3),dtype=np.uint8)
 whiteImage = np.full(shape=(10,10,4),fill_value=255,dtype=np.uint8)
 ```
 
-- **图像相加：**
-  - `imgA + imgB`：**当数值大于一个字节时，大于一个字节的位数都被丢失了**。
-    $$
-    (A + B) \ \% \ 256
-    $$
-
-  - `cv2.add(imgA,imgB)`：**当数值超过`255`时，取值为`255`**
-    $$
-    \min(A+B,255)
-    $$
-   
-  - `cv2.addWeighted(imgA, alpha, imgB, beta, gamma)`：
-    $$
-    \rm min(round(A*\alpha + B *\beta + \gamma),255) 
-    $$
-
-```python
-# 阈值操作
-ret,destImg = cv2.threshold(img,threshVal,maxVal,flags)
-```
-
-- **图像阈值类型：** 
-  - `cv2.THRESH_BINARY`：
-    - \> threshVal：通道值大于阈值时，取值为`maxVal`
-    - < threshVal：通道值大于阈值时，取值为`0`
-  - `cv2.THRESH_BINARY_INV`：计算方式与上面相反
-  - `cv2.THRESH_TOZERO`：
-      - \> threshVal：通道值大于阈值时，不变
-      - < threshVal：通道值大于阈值时，取值为`0`
-  - `cv2.THRESH_TOZERO_INV`：计算方式与上面相反
-  - `cv2.THRESH_TRUNC`：
-      - \> threshVal：通道值大于阈值时，取值为`maxVal`
-      - < threshVal：通道值大于阈值时，不变
-
-  <p style="text-align:center;"><img src="../../image/computerVision/threshold_categories.jpg" width="50%" align="middle" /></p>
 
 ## 修改像素尺寸
 
@@ -170,25 +130,6 @@ ret,destImg = cv2.threshold(img,threshVal,maxVal,flags)
 cv2.resize(img, Tuple[width, height], fx, fy)
 cv2.resize(img,(0,0),fx=1.5,fy=1)
 ```
-
-## 图像边界扩展
-
-**作用：** 当图像需要变大，但是不想直接缩放，则可以选择不同的方法将图片外围进行扩展，使得原图变大
-
-```python
-destImage = cv2.copyMakeBorder(src: Mat, 
-                              top_size, bottom_size, left_size, right_size, 
-                              borderType)
-```
-- `top_size, bottom_size, left_size, right_size`：图片上下左右，需要填充的像素值
-- `borderType`：填充方式
-  - `BORDER_REPLICATE`:复制法，将最边缘像素向外复制。
-  - `BORDER_REFLECT`:反射法，对感兴趣的图像中的像素在两边进行复制例如：dcba | abcd（原图） | dcba
-  - `BORDER_REFLECT1O1`:反射法，也就是以最边缘像素为轴，例如 dcb | abcd（原图） | cba，**没有复制最边缘的像素**
-  - `BORDER_WRAP`:外包装法，abcd | abcd | abcd ，重复原图
-  - `BORDER_CONSTANT`:常量法，边界用常数值填充。111 | abcd | 111
-
-  <p style="text-align:center;"><img src="../../image/computerVision/makeBorder_categories.jpg" width="50%" align="middle" /></p>
 
 # 视频的基本操作
 
