@@ -1,5 +1,7 @@
 # 图像进阶操作
 
+<a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/imageOperation" class="jump_link"> 本章测试程序 </a>
+
 # 1. 图像运算
 
 ## 1.1. 加减乘除
