@@ -1,6 +1,7 @@
 # 图像基础理论
 
 
+
 # 1. 色彩空间
 
 <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/pixel.jpg" width="50%" align="middle" /></p>
@@ -239,3 +240,12 @@ d:  (2753486186544, False)
 ```
 
 <!-- panels:end -->
+
+# 3. 图像参数
+
+- **像素：** 图片中的一个颜色块
+- **颜色通道：** 表示一个像素（颜色）的向量的分量，一个分量就是一个颜色通道，例如 RGB模型，像素的组成就为`[R，G，B]`，这就有三个颜色通道
+- **位深：** 一个颜色通道值由几位二级制数表示
+- **像素块坐标：** 图片的左上角为坐标原点，一个坐标对应一个像素
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/pixelCoordinates.png" width="50%" align="middle" /></p>
+- **分辨率：** 像素坐标的宽度 x 像素坐标的高度
