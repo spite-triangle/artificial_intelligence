@@ -12,6 +12,25 @@
 ![convolution](../../image/neuralNetwork/convolution.jpg)
 
 - **单步卷积**：计算流程如上图所示，卷积核（过滤器）与图片颜色通道值对应相乘，然后乘积结果再相加。
+  $$
+  \begin{aligned}
+  e&=H * A \\
+  &=\left[\begin{array}{lll}
+  \mathrm{h}_{11} & \mathrm{~h}_{12} & \mathrm{~h}_{13} \\
+  \mathrm{~h}_{21} & \mathrm{~h}_{22} & \mathrm{~h}_{23} \\
+  \mathrm{~h}_{31} & \mathrm{~h}_{32} & \mathrm{~h}_{33}
+  \end{array}\right] *\left[\begin{array}{ccc}
+  a & b & c \\
+  d & e & f \\
+  g & h & i
+  \end{array}\right] \\
+  &=\operatorname{sum}\left(\left[\begin{array}{lll}
+  \mathrm{a} \times \mathrm{h}_{11} & \mathrm{~b} \times \mathrm{h}_{12} & \mathrm{c} \times \mathrm{h}_{13} \\
+  \mathrm{~d} \times \mathrm{h}_{21} & \mathrm{e} \times \mathrm{h}_{22} & \mathrm{f} \times \mathrm{h}_{23} \\
+  \mathrm{~g} \times \mathrm{h}_{31} & \mathrm{~h} \times \mathrm{h}_{32} & \mathrm{i} \times \mathrm{h}_{33}
+  \end{array}\right]\right)
+  \end{aligned}
+  $$
 - **卷积移动**：如动态图所示，输入为 `7x7` ，卷积核`3x3`，卷积核移动步长`1`，输出结果为`5x5`
 <!-- div:right-panel -->
 

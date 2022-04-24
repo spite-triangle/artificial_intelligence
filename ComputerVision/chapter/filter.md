@@ -1,5 +1,7 @@
 # 图像滤波
 
+<a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/filter" class="jump_link"> 本章测试程序 </a>
+
 # 卷积操作
 
 [图片卷积原理]( DeepLearning/chapter/convolution.md )
@@ -13,7 +15,14 @@
 cv2.filter2D(src, ddepth, kernel:np.ndarray[, dst[, anchor[, delta[, borderType]]]]) -> dst
 ```
 
-# 方盒滤波与均值滤波
+# 低通滤波
+
+> [!note]
+> - 消除图片中的高斯噪声
+> - 消除图片中的椒盐噪声
+> - 图片模糊
+
+## 方盒滤波与均值滤波
 
 - 卷积核
     $$
@@ -39,9 +48,9 @@ cv2.blur(src, kernelSize:tuple[, dst[, anchor[, borderType]]]) -> dst
 
 <p style="text-align:center;"><img src="../../image/computerVision/boxfilter.jpg" width="50%" align="middle" /></p>
 
-# 高斯滤波
+## 高斯滤波
 
-## 高斯分布
+### 高斯分布
 
 <!-- panels:start -->
 <!-- div:left-panel -->
@@ -80,7 +89,7 @@ $$
 f(x,y) = \frac{1}{2 \pi \sigma_1 \sigma_2} \exp{ \left [ - \frac{1}{2}(\frac{x^2}{\sigma_1^2}  + \frac{y^2}{\sigma_2^2} ) \right ]}
 $$
 
-## 滤波
+### 滤波
 
 1. 假定卷积核的中心坐标 $(x,y)$ 为 $(0,0)$ ，然后得到周围的坐标值
     <p style="text-align:center;"><img src="../../image/computerVision/gaussKernelIndex.jpg" width="50%" align="middle" /></p>
@@ -91,7 +100,7 @@ $$
 4. 整数高斯模板：所有概率值除以左上角的概率值，然后四舍五入获得整数值。
 5. 最后用获得的高斯模板卷积核，进行卷积计算
 
-## OpenCV 代码
+### OpenCV 代码
 
 ```python
 # sigmaX ：x 的标准差，不指定的话，根据 kernelSize 进行计算
@@ -103,7 +112,7 @@ cv2.GaussianBlur(src, kernelSize:tuple, sigmaX[, dst[, sigmaY[, borderType]]]) -
 
 <p style="text-align:center;"><img src="../../image/computerVision/gaussFilter.jpg" width="50%" align="middle" /></p>
 
-# 中值滤波
+## 中值滤波
 
 - **实现：** 对卷积核框住的像素值进行排序；取中间值作为输出结果。
 
@@ -114,9 +123,9 @@ cv2.medianBlur(src, kernelSize:int[, dst]) -> dst
 - 效果：去除「椒盐噪声」效果最好
 <p style="text-align:center;"><img src="../../image/computerVision/medianFilter.jpg" width="75%" align="middle" /></p>
 
-# 双边滤波
+## 双边滤波
 
-## 原理
+### 原理
 
 - **原因：** 高斯滤波在去除高斯噪声的同时，也会不加区分的将图像中的「边缘」一并给加权平均了，所以就导致图片整体看起来很模糊。为了保护边缘，就产生了「双边滤波算法」。
 - **图像边缘：** 边缘的产生就是因为相邻的像素的颜色通道差别太大，因此，对相邻像素的颜色做差，就能标记出边缘（差值越大，就说明边缘的可能性越高）。
@@ -151,7 +160,7 @@ cv2.medianBlur(src, kernelSize:int[, dst]) -> dst
         W = \sum\limits_{p \in K} G_s(p)G_r(p)
         $$
 
-## OpenCV 代码
+### OpenCV 代码
 
 ```python
 # sigmaColor：sigma_s，高斯分布的标准差
@@ -161,3 +170,216 @@ cv2.bilateralFilter(src, kernelSize:int, sigmaColor, sigmaSpace[, dst[, borderTy
 - **效果：** 同样的 $\sigma_s$ 值和卷积核大小，双边滤波轮廓清晰度更高，去高斯噪声能力相对弱一点。
 
 <p style="text-align:center;"><img src="../../image/computerVision/bilateral_gauss.jpg" width="75%" align="middle" /></p>
+
+# 高通滤波
+
+> [!note]
+> - 边缘监测
+> - 图像边缘：图像的灰度图中，相邻像素灰度值差距较大的位置
+
+<p style="text-align:center;"><img src="../../image/computerVision/border_gray.jpg" width="50%" align="middle" /></p>
+
+## sobel 算子
+
+- **原理**：对图像邻近的灰度像素进行求导，斜率较大的地方，边缘的概率最大。
+    <p style="text-align:center;"><img src="../../image/computerVision/firstDerivative.jpg" width="50%" align="middle" /></p>
+- **差分法**：图像中近似求导的方法
+    $$
+    I'(x_i) = \frac{I(x_{i+1}) -I(x_i) }{x_{i+1} - x_i}
+    $$
+
+    **这里只对像素的一个方向进行求偏导（x方向或者y方向）。求导的实际操作仍然是卷积操作，所以对于分母差值也可以省略掉**
+
+    $$
+    I'(x_i) = I(x_{i+1}) -I(x_i)
+    $$
+
+- **卷积核**
+    - x方向求偏导：提取竖向的边缘，目标像素左右的像素进行差值计算
+        $$
+        G_x = \begin{bmatrix}
+            -1 & 0 & +1 \\
+            -2 & 0 & +2 \\
+            -1 & 0 & +1 \\
+        \end{bmatrix}
+        $$
+    - y方向求偏导：提取横向的边缘，目标像素上下的像素进行差值计算
+        $$
+        G_y = \begin{bmatrix}
+            -1 & -2 & -1 \\
+            0 & 0 & 0 \\
+            +1 & +2 & +1 \\
+        \end{bmatrix}
+        $$
+
+```python
+# ddepth：cv2.CV_， 结果图像的位深
+# dx：对 x 方向求偏导
+# dy：对 y 方向求偏导
+# ksize：卷积核大小
+cv2.Sobel(src, ddepth, dx:bool, dy:bool[, dst[, ksize:int[, scale[, delta[, borderType]]]]]) -> dst
+
+# src中的数据取绝对值
+cv2.convertScaleAbs(src[, dst[, alpha[, beta]]]) -> dst
+```
+
+<details>
+<summary><span class="details-title">代码案例</span></summary>
+<div class="details-content"> 
+
+```python
+import cv2 
+import numpy as np
+
+img = cv2.imread('./cat.jpeg',cv2.IMREAD_GRAYSCALE)
+img = cv2.resize(img,(0,0),fx=0.6,fy=0.6)
+
+# Sobel(src, ddepth, dx, dy[, dst[, ksize:int[, scale[, delta[, borderType]]]]]) -> dst
+# 竖着的边界
+imgv = cv2.Sobel(img,cv2.CV_16S,dx=1,dy=0,ksize=3)
+imgv = cv2.convertScaleAbs(imgv)
+
+# 横着的边界
+imgh = cv2.Sobel(img,cv2.CV_16S,dx=0,dy=1,ksize=3)
+imgh = cv2.convertScaleAbs(imgh)
+
+# 边界叠加
+imga = cv2.add(imgh,imgv)
+
+cv2.imshow('sobel',np.hstack((img,imgv,imgh,imga)))
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+``` 
+
+</div>
+</details>
+
+<p style="text-align:center;"><img src="../../image/computerVision/sobel.jpg" width="75%" align="middle" /></p>
+
+> [!note]
+> - `Sobel`计算，会导致像素值为负，因此输出图像的位深`ddepth`应当使用「有符号类型」，例如`cv2.CV_16S`、`cv2.CV_32F`等
+> - 颜色通道数值不存在负数，所以还需要对计算结果取绝对值`convertScaleAbs` 
+> - 对于横向、竖向的边界提取要分两次进行，一起提取效果很差。
+
+
+## Schar 算子
+
+- **介绍：** 对 Sobel 算子的改进。
+
+- **卷积核**：<span style="color:red;font-weight:bold"> 卷积核大小固定`3x3` </span>
+    - x方向求偏导：提取竖向的边缘，目标像素左右的像素进行差值计算
+        $$
+        G_x = \begin{bmatrix}
+            -3 & 0 & +3 \\
+            -10 & 0 & +10 \\
+            -3 & 0 & +3 \\
+        \end{bmatrix}
+        $$
+    - y方向求偏导：提取横向的边缘，目标像素上下的像素进行差值计算
+        $$
+        G_y = \begin{bmatrix}
+            -3 & -10 & -3 \\
+            0 & 0 & 0 \\
+            +3 & +10 & +3 \\
+        \end{bmatrix}
+        $$
+
+```python
+cv2.Scharr(src, ddepth, dx, dy[, dst[, scale[, delta[, borderType]]]]) -> dst
+```
+
+## 拉普拉斯算子
+
+- **思想：** Sobel算子是对像素求解一阶导数，最大值处就是边缘；对一阶导数再求导，那么零值处就是边缘，**但是，由于利用差分进行计算而且像素点也是离散的，进度丢失大，这个「零」的表现其实不明显。边界显示的还是主要两边的峰值。**
+    <p style="text-align:center;"><img src="../../image/computerVision/secondDerivativer.jpg" width="25% " align="middle" /></p>
+- **二阶差分：**
+
+    一阶差分近似为
+    $$
+    I'(x_{i+1}) = I(x_{i+1}) -I(x_i)
+    $$
+    对一阶差分求导
+    $$
+    \begin{aligned}
+        I''(x_i) &= I'(x_{i+1}) - I'(x_i) \\
+        &=  I(x_{i+1}) - I(x_{i}) - [ I(x_{i}) -I(x_{i-1}) ] \\
+        &= I(x_{i+1}) - 2I(x_{i}) + I(x_{i-1})
+    \end{aligned}
+    $$   
+    该求导结果只考虑了一个方向的，现在考虑两个方向
+    $$
+    \begin{aligned}
+        I''(x_i,y_i) &= I''_{xx}(x_{i},y_{i}) + I''_yy(x_i,y_i) + I''_{xy}(x_i,y_i) \\
+        &= I''_{xx}(x_{i},y_{i}) + I''_yy(x_i,y_i) 
+    \end{aligned}
+    $$ 
+    其中`x,y`方向是相互独立的 $I''_{xy}=0$，因此求解得
+    $$
+    I''(x_i,y_i) = I(x_{i+1},y_{i})  + I(x_{i-1},y_{i}) + I(x_{i},y_{i+1}) + I(x_{i},y_{i-1}) - 4I(x_{i},y_{i}) 
+    $$
+    写成矩阵形式就为
+    $$
+    I''(x_i,y_i) = \begin{bmatrix}
+      0 & 1 & 0 \\  
+      1 & -4 & 1 \\  
+      0 & 1 & 0 \\  
+    \end{bmatrix} * \begin{bmatrix}
+        I(x_{i-1},y_{i-1}) & I(x_{i},y_{i-1}) & I(x_{i+1},y_{i-1}) \\
+        I(x_{i-1},y_{i}) & I(x_{i},y_{i}) & I(x_{i+1},y_{i}) \\
+        I(x_{i-1},y_{i+1}) & I(x_{i},y_{i+1}) & I(x_{i+1},y_{i+1}) \\
+    \end{bmatrix}
+    $$
+
+
+- **效果：** 拉普拉斯算子处理渐变图的能力要强于Sobel算子
+
+    ```python
+    cv2.Laplacian(src, ddepth:cv2.CV_[, dst[, ksize:int[, scale[, delta[, borderType]]]]]) -> dst
+    ```
+    <p style="text-align:center;"><img src="../../image/computerVision/Laplace_sobel.jpg" width="75%" align="middle" /></p>
+
+## Canny边缘检测
+
+### 算法流程
+
+1. 使用高斯滤波对图像进行滤波
+    $$
+    I_g = G * I
+    $$
+2. 利用Sobel算子，计算`x,y`方向的梯度
+    $$
+    \begin{aligned}
+        I_{sx} = G_x * I_g \\
+        I_{sy} = G_y * I_g 
+    \end{aligned}
+    $$
+    梯度强度
+    $$
+    I_s = \sqrt{I_{sx}^2 + I_{sy}^2} \approx |I_{sx}|+|I_{xy}|
+    $$
+    梯度方向
+    $$
+    \theta = \arctan (\frac{I_{sy}}{I_{sx}})
+    $$
+3. 非极大值抑制：得到的 $I_s$ 非局部极大值，就全部舍弃掉。**进行边缘预选**
+   1. 线性差值法：对比 $I_s(x_i,y_i)$ 与 $I_1$ 、$I_2$ 的值，若 $I_s(x_i,y_i)$ 最大，则保留作为边界，否则舍弃掉。$I_1$ 、$I_2$ 根据 $\theta$ 进行插值计算。
+        <p style="text-align:center;"><img src="../../image/computerVision/canny_linear.jpg" width="50%" align="middle" /></p>
+
+    2. 角度近似：将中心点周围的像素非为8个方向（$0^\circ、45^\circ、90^\circ$等），然后 $\theta$ 离哪个角度近，就用这个角度直线上的梯度值与中心点梯度进行比较，中心点最大就保留，否则舍弃。
+        <p style="text-align:center;"><img src="../../image/computerVision/canny_max.jpg" width="50%" align="middle" /></p>
+
+4. 双阈值检测：**确定最终边缘**
+    <p style="text-align:center;"><img src="../../image/computerVision/doubleThreshold.jpg" width="50%" align="middle" /></p>
+    
+    - 梯度 > maxVal ：认为是边界像素
+    - 梯度 < minVal ：绝对不是边界
+   - 梯度介于二者之间：判断当前像素是否和边界连着，若连着则保留，例如 `C`，否则舍弃掉，例如`B`
+
+### OpenCV 代码
+
+```python
+#  threshold1：minVal
+# threshold2：maxVal
+cv2.Canny(image, threshold1, threshold2[, edges[, apertureSize[, L2gradient]]]) -> edges
+```
+<p style="text-align:center;"><img src="../../image/computerVision/canny.jpg" width="75%" align="middle" /></p>

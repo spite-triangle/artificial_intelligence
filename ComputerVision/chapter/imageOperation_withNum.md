@@ -646,31 +646,8 @@ cv2.warpPerspective(src:image, M, dsize[, dst[, flags[, borderMode[, borderValue
 > [!note]
 > `srcPoints,dstPoints`的 `dtype` 必须写为 `np.float32`，而非`np.float、np.float`。
 
-# 5. 阈值控制
 
-```python
-# 阈值控制
-ret,destImg = cv2.threshold(img,threshVal,maxVal,flags)
-```
-- **作用：** 根据设定的「阈值」将图像拆分为两个部分，例如纯黑-纯白图。
-
-- **图像阈值类型：** 
-  - `cv2.THRESH_BINARY`：
-    - \> threshVal：通道值大于阈值时，取值为`maxVal`
-    - < threshVal：通道值大于阈值时，取值为`0`
-  - `cv2.THRESH_BINARY_INV`：计算方式与上面相反
-  - `cv2.THRESH_TOZERO`：
-      - \> threshVal：通道值大于阈值时，不变
-      - < threshVal：通道值大于阈值时，取值为`0`
-  - `cv2.THRESH_TOZERO_INV`：计算方式与上面相反
-  - `cv2.THRESH_TRUNC`：
-      - \> threshVal：通道值大于阈值时，取值为`maxVal`
-      - < threshVal：通道值大于阈值时，不变
-
-  <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/threshold_categories.jpg" width="50%" align="middle" /></p>
-
-
-# 6. 图像边界扩展
+# 5. 图像边界扩展
 
 **作用：** 当图像需要变大，但是不想直接缩放，则可以选择不同的方法将图片外围进行扩展，使得原图变大
 
