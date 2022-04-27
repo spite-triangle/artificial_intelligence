@@ -10,4 +10,4 @@
 - [第四章 图像进阶操作](ComputerVision/chapter/imageOperation_withNum.md)
 - [第五章 图像滤波](ComputerVision/chapter/filter_withNum.md)
 - [第六章 图像形态学](ComputerVision/chapter/morphology_withNum.md)
-
+- [第七章 图像处理](ComputerVision/chapter/imageProcess_withNum.md)
