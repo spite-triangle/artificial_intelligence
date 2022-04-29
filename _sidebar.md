@@ -7,4 +7,5 @@
 - [强化学习](./ReinforcementLearning/README.md)
 
 **机器视觉**
-- [计算机视觉](./ComputerVision/README.md)
+- [OpenCV](./ComputerVision/README.md)
+

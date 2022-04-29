@@ -369,11 +369,12 @@ cv2.Scharr(src, ddepth, dx, dy[, dst[, scale[, delta[, borderType]]]]) -> dst
         <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/canny_max.jpg" width="50%" align="middle" /></p>
 
 4. 双阈值检测：**确定最终边缘**
+
     <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/doubleThreshold.jpg" width="50%" align="middle" /></p>
     
     - 梯度 > maxVal ：认为是边界像素
     - 梯度 < minVal ：绝对不是边界
-   - 梯度介于二者之间：判断当前像素是否和边界连着，若连着则保留，例如 `C`，否则舍弃掉，例如`B`
+    - 梯度介于二者之间：判断当前像素是否和边界连着，若连着则保留，例如 `C`，否则舍弃掉，例如`B`
 
 ### 3.4.2. OpenCV 代码
 

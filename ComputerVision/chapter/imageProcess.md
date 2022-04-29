@@ -73,10 +73,10 @@ cv2.findContours(image, mode, method[, contours[, hierarchy[, offset]]]) ->image
 cv2.drawContours(canva:image, contours, contourIdx, color[, thickness[, lineType[, hierarchy[, maxLevel[, offset]]]]]) -> image
 ```
 
-完整流程
+<details>
+<summary><span class="details-title">完整代码</span></summary>
+<div class="details-content"> 
 
-<!-- panels:start -->
-<!-- div:left-panel -->
 
 ```python
 import cv2
@@ -96,14 +96,14 @@ canva = img.copy()
 imgRes = cv2.drawContours(canva,contours,-1,(0,0,255),1)
 
 cv2.imshow('contours',imgRes)
-
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 ```
 
-<!-- div:right-panel -->
 <p style="text-align:center;"><img src="../../image/computerVision/shapecontours.jpg" width="50%" align="middle" /></p>
-<!-- panels:end -->
+
+</div>
+</details>
 
 ## 轮廓特征
 
@@ -374,15 +374,11 @@ dst = clahe.apply(src)
 
 # 图像傅里叶变换
 
-> - [傅里叶变换掐死教程（说人话版）](https://zhuanlan.zhihu.com/p/19763358)
-> 
-> - [一维傅里叶变换（数学精简版）](https://spite-triangle.github.io/algorithms/fastFourier/Fourier.html)
-> 
-> - [数字信号处理（一维傅里叶完整版）](https://spite-triangle.github.io/algorithms/digitalSignalProcessing/digitalSignalProcessing.html)
-> 
-> - [二维傅里叶变换（说人话版）](https://zhuanlan.zhihu.com/p/110026009)
-> 
-> - [图像傅里叶（说人话版）](https://zhuanlan.zhihu.com/p/99605178)
+> -  <a href="https://zhuanlan.zhihu.com/p/19763358" class="jump_link"> 傅里叶变换掐死教程（说人话版） </a>
+> - <a href="https://spite-triangle.github.io/algorithms/fastFourier/Fourier.html" class="jump_link"> 一维傅里叶变换（数学精简版）</a>
+> - <a href="https://spite-triangle.github.io/algorithms/digitalSignalProcessing/digitalSignalProcessing.html" class="jump_link"> 数字信号处理（一维傅里叶完整版） </a>
+> - <a href="https://zhuanlan.zhihu.com/p/110026009" class="jump_link"> 二维傅里叶变换（说人话版） </a>
+> - <a href="https://zhuanlan.zhihu.com/p/99605178" class="jump_link"> 图像傅里叶（说人话版） </a>
 
 ## 二维傅里叶变换
 
@@ -396,7 +392,7 @@ dst = clahe.apply(src)
   F(u, v)=\sum_{x=0}^{M-1} \sum_{y=0}^{N-1} f(x, y) e^{-j 2 \pi\left(\frac{\mathrm{ux}}{\mathrm{M}}+\frac{v y}{N}\right)}
   $$
 
-  **将二维数据进行傅里叶变换后得到的值 $F(u,u)$ 则代表了相应的「正弦片面波」**
+  **将二维数据进行傅里叶变换后得到的值 $F(u,u)$ 则代表了相应的「正弦平面波」**
 
 ## 正弦平面波
 
@@ -583,3 +579,7 @@ dst = clahe.apply(src)
   
   </div>
   </details>
+
+> [!tip]
+> - 高通滤波：增强边缘
+> - 低通滤波：模糊图片

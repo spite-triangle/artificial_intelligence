@@ -18,6 +18,8 @@
 
 }
 
+
+
 .cover .cover-main>p:last-child a:hover {
     color: #ffff;
     background: hsla(0, 0%, 37%, 0.387);
@@ -30,6 +32,10 @@
 .cover .cover-main>p:last-child a:first-child:hover {
     color: black;
     background: hsla(0, 0%, 0%, 0.387);
+}
+
+.markdown-section blockquote {
+    padding: 0.2em ;
 }
 
 /* details 配置 */

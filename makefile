@@ -5,3 +5,4 @@ build:
 	find ./ComputerVision/chapter/ -name "*.md" -exec python3 ./AutoNum.py {} \;
 	sed -i 's/src="..\/..\//src="\/artificial_intelligence\//g' ./ReinforcementLearning/chapter/*_withNum.md
 	sed -i 's/src="..\/..\//src="\/artificial_intelligence\//g' ./ComputerVision/chapter/*_withNum.md
+	cd  ./ComputerVision/chapter/ ; rm README_withNum.md _sidebar_withNum.md
