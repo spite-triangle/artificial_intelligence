@@ -10,4 +10,5 @@
     3. 检索轮廓：对纸张边缘进行轮廓检索，轮廓面积最大的就是纸张的轮廓
     4. **提取角点：** 对纸张轮廓进行「轮廓近似」，由于四边形的四条边接近于直线，这样轮廓近似后，所保留下的轮廓点就是四个角点。
     5. 进行透视变换
-    
+
+- <a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/autoPerspective" class="jump_link"> 案例项目工程 </a>

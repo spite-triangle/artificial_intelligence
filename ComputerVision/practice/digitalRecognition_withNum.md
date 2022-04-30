@@ -3,7 +3,8 @@
 # 1. 案例说明
 - **目的：** 识别出图片的数字
 - **思路：** 首先准备一个数字模板，然后通过模板匹配算法与图片中数字进行对比，进而识别出每个数字。
-- [案例项目工程](https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/digitalRecognition)
+- <a href="https://github.com/spite-triangle/artificial_intelligence/tree/master/example/computerVision/digitalRecognition" class="jump_link"> 案例项目工程 </a>
+
 
 # 2. 具体流程
 
