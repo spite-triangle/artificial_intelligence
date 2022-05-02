@@ -384,3 +384,115 @@ cv2.Scharr(src, ddepth, dx, dy[, dst[, scale[, delta[, borderType]]]]) -> dst
 cv2.Canny(image, threshold1, threshold2[, edges[, apertureSize[, L2gradient]]]) -> edges
 ```
 <p style="text-align:center;"><img src="../../image/computerVision/canny.jpg" width="75%" align="middle" /></p>
+
+# 附录：高斯滤波的叠加性
+
+假设对图片依次做一次 $\sigma_1$ 、$\sigma_2$ 的卷积
+
+$$
+I(x,y) = G(u,v;\sigma_2) * G(u,v;\sigma_1) * I(x,y)
+$$
+
+根据「卷积结合律」
+
+$$
+I(x,y) =\left[ G(u,v;\sigma_2) * G(u,v;\sigma_1) \right]  * I(x,y)
+$$
+
+因此，可以先计算高斯核 $G(u,v;\sigma_2) * G(u,v;\sigma_1)$ 的卷积结果，然后才对原图进行高斯滤波。
+
+这里的高斯核是二维的，为了推导方便，下面主要对一维进行推导，推导结果对二维同理。一维高斯分布
+
+$$
+f(x;\sigma) = \frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{x^2}{2 \sigma^2}}
+$$
+
+标准差分别为 $\sigma_1$ 与 $\sigma_2$ 的高斯分布进行卷积
+
+$$
+\begin{aligned}
+    f(t;\sigma_1) * f(t;\sigma_2) = \int_{- \infin}^{+\infty} f(\tau;\sigma_1) f(t-\tau;\sigma_2) d \tau 
+\end{aligned}
+$$
+
+根据傅里叶变换卷积定理，可将卷积变为乘积计算
+
+$$
+\begin{array}{l}
+F\left[f_{1}(t) * f_{2}(t)\right]=\int_{-\infty}^{+\infty}\left[\int_{-\infty}^{+\infty} f_{1}(\tau) f_{2}(t-\tau) d \tau\right] e^{-j w t} d t \\
+=\int_{-\infty}^{+\infty} f_{1}(\tau)\left[\int_{-\infty}^{+\infty} f_{2}(t-\tau) e^{-j w t} d t\right] d \tau \\
+=\int_{-\infty}^{+\infty} f_{1}(\tau) F_{2}(w) e^{-j w \tau} d \tau \\
+=F_{2}(w) \int_{-\infty}^{+\infty} f_{1}(\tau) e^{-j w \tau} d \tau \\
+=F_{2}(w) F_{1}(w)
+\end{array}
+$$
+
+上式就为
+
+$$
+F[ f(t;\sigma_1) * f(t;\sigma_2) ] = F(t;\sigma_1) F(t;\sigma_2)
+$$
+
+现在就只需要带入高斯分布傅里叶变换即可
+
+$$
+F(w) = e^{-\frac{1}{2} w^2 \sigma^2}
+$$
+
+
+<details>
+<summary><span class="details-title">高斯分布的傅里叶变换</span></summary>
+<div class="details-content"> 
+
+$$
+\begin{aligned}
+    令： a &= \frac{1}{2\sigma^2}\\
+    F(f(x;\sigma)) &= \int_{-\infty}^{+\infty} f(x;\sigma) e^{-j w x} d x \\
+    &= \frac{1}{\sigma \sqrt{2 \pi}} \int_{-\infty}^{+\infty} e^{-a x^{2}} e^{-j w x} d x 
+\end{aligned}
+$$
+
+继续求解积分
+
+$$
+\begin{aligned}
+    &= \int_{-\infty}^{+\infty} e^{-a x^{2}} e^{-j w x} d x  \\
+    &= \int_{-\infty}^{+\infty} e^{-a x^{2} -j w x} d x  \\
+    &= \int_{-\infty}^{+\infty} e^{-(\sqrt a x + \frac{jw}{2\sqrt{a}})^2 -\frac{w^2}{4a}} d x  \\
+    令：u&= \sqrt a x + \frac{jw}{2\sqrt{a}} \\
+     &= e^{ -\frac{w^2}{4a}} \int_{-\infty}^{+\infty} e^{-u^2} \frac{1}{\sqrt{a}} du \\
+    &=  e^{ -\frac{w^2}{4a}} \sqrt{\frac{\pi}{a}}
+\end{aligned}
+$$
+
+<a href="https://blog.csdn.net/zhouchangyu1221/article/details/104178387" class="jump_link"> 积分计算公式 </a>。积分结果回代
+
+$$
+\begin{aligned}
+    &= \frac{1}{\sigma \sqrt{2 \pi}} \int_{-\infty}^{+\infty} e^{-a x^{2}} e^{-j w x} d x \\
+    &= \frac{1}{\sigma \sqrt{2 \pi}} e^{ -\frac{w^2}{4a}} \sqrt{\frac{\pi}{a}} \\
+    回代a：&= \frac{1}{\sigma \sqrt{2 \pi}} \sigma\sqrt{2\pi} e^{-\frac{1}{2} w^2 \sigma^2} \\
+    &=e^{-\frac{1}{2} w^2 \sigma^2}
+\end{aligned}
+$$
+
+</div>
+</details>
+
+通过傅里叶变换可以求解得
+
+$$
+\begin{aligned}
+    F[ f(t;\sigma_1) * f(t;\sigma_2) ] &= F(t;\sigma_1) F(t;\sigma_2) \\
+    &= e^{-\frac{1}{2} w^2 \sigma_1^2}e^{-\frac{1}{2} w^2 \sigma_2^2} \\
+    &= e^{-\frac{1}{2} w^2 (\sigma_1^2 + \sigma_2^2)}\\
+    &= F[f(t;\sqrt{\sigma_1^2 + \sigma_2^2})]
+\end{aligned}
+$$
+
+> [!note|style:flat]
+> 对图片依次进行 $\sigma_1$ 与 $\sigma_2$的高斯滤波后，其结果与直接进行 $\sqrt{\sigma_1^2 + \sigma_2^2}$ 的结果等价。
+> 
+> $$
+ G(u,v;\sigma_2) * G(u,v;\sigma_1) = G(u,v;\sqrt{\sigma_1^2 + \sigma_2^2})
+$$
