@@ -606,7 +606,7 @@ imgMatch = cv2.drawMatches(img1,kp1,img2,kp2,matchRes[:15],None,flags=2)
     - `DMatch.queryIdx`：对应匹配第一张输入图片（imgSrc）的 `KeyPoint` 对象的索引
     - `DMatch.trainIdx`：对应匹配第二张输入图片（imgTemp）的 `KeyPoint` 对象的索引
     - `DMatch.distance`：关键点描述符的距离
-- <a href="https://docs.opencv.org/3.4/de/d30/structcv_1_1DrawMatchesFlags.html" class="jump_link">  `DrawMatchesFlags` </a>：控制匹配结果如何绘制
+- <a href="https://docs.opencv.org/3.4/de/d30/structcv_1_1DrawMatchesFlags.html" class="jump_link">  DrawMatchesFlags </a>：控制匹配结果如何绘制
 
 
 ## 1对多匹配
@@ -634,7 +634,7 @@ for m, n in matchRes:
 imgMatch = cv2.drawMatchesKnn(img1,kp1,img2,kp2,goodMatchs,None,flags=2)
 ```
 
-- **`BFMatcher`**：不用启用交叉检测，之后的筛选匹配步骤就能规避
+- **`BFMatcher`** ：不用启用交叉检测，之后的筛选匹配步骤就能规避
 - **`knnMatch`结果**：该匹配算法返回的结果为`tuple`，是一组`DMatch`类型。其含义为一张图片中的一个关键点与另一张图片关键点的 k 个对应值。
 - **筛选匹配：** 每一个特征点（设为A）都有最匹配的另外两个特征点在另一张图上，设为B和C。其中AB的距离最短，AC的距离次短。那么规定，如果AB间的距离小于AC间距离的0.75倍，则认为AB的匹配度远远大于A与其他任何点的匹配度，则将AB两点连起来。
 
