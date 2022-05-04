@@ -513,3 +513,128 @@ plt.show()
 4. **计算幅值与方向：** 同上文所述，计算 `16 x 16` 中每个像素点的梯度幅值与方向
 5. **描述符创建：** 将 `16 x 16` 拆分为 `16` 个 `4x4` 的小区域，并且每个区域进行直方图统计，记录下`8`个方向上的幅值，因此，一个关键点描述符的维度就为 `4*4*8=128`。
 6. 重复上述步骤，将高斯金字塔中的所有关键点描述符创建出来。
+
+## 2.9. OpenCV 代码
+
+```python
+img = cv2.imread('./cat.jpeg')
+imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# 创建 SIFT 算法
+# nfeatures：特征层数
+# nOctaveLayers：高斯金字塔 octave 组数
+# contrastThreshold：极值点阈值
+# edgeThreshold：边缘效应阈值
+# SIFT_create([, nfeatures[, nOctaveLayers[, contrastThreshold[, edgeThreshold[, sigma]]]]]) -> retval
+sift = cv2.SIFT_create()
+
+# 查找关键点位置
+kp = sift.detect(imgGray,None)
+
+# 计算特征
+# keypoints：所有关键点
+# descriptors：关键点的描述符
+# compute(img,KeyPoints:tuple) -> KeyPoints:tuple, descriptors:np.ndarray
+kp,des = sift.compute(imgGray,kp)
+
+# 将上面两步骤合并为一个函数
+kp,des = sift.detectAndCompute(imgGray,None)
+
+# 绘制关键点
+# drawKeypoints(image, keypoints, outImage[, color[, flags]]) -> outImage
+cv2.drawKeypoints(img,kp,img)
+```
+
+> [!tip]
+> 如果程序不能运行，就卸载掉已经安装的旧版 `opencv-contrib-python`，然后直接安装最新版的。SIFT 算法专利已经过期，最新版本又能继续使用了。
+
+
+- <a href="https://docs.opencv.org/4.x/d2/d29/classcv_1_1KeyPoint.html" class="jump_link"> 关键点类 </a>
+
+    ```python
+    # 得到的是 KeyPoint 类的一个元组
+    kps = sift.detect(img,None)
+    kp = kps[0]
+
+    # 坐标位置
+    kp.pt
+
+    # 关键点的角度
+    kp.angle
+
+    # 关键点的幅值
+    kp.response
+    ```
+
+# 3. BF特征匹配
+## 3.1. 理论
+- **思路：** 暴力匹配，遍历两张图片关键点的描述符，然后比较两个描述符之间的差异，例如计算两个描述符之间的距离。
+
+- **交叉检测（crossCheck）：** 蓝色图的关键点A与紫色图的关键点B匹配时，A 描述符与紫图中所有描述符最接近的点是 B，同时 B 描述符与蓝图中所有描述符最接近的点也要是 A，这样才认为 A 点与 B 点匹配。
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/BF_crosscheck.jpg" width="50%" align="middle" /></p>
+
+
+## 3.2. 1对1匹配
+
+
+```python
+sift = cv2.SIFT_create()
+kp1,des1 = sift.detectAndCompute(img1Gray,None)
+kp2,des2 = sift.detectAndCompute(img2Gray,None)
+# 建立匹配算法
+# normType：两个描述符距离的计算方式，默认为 cv2.NORM_L2，两个坐标的欧式距离 
+# cv2.BFMatcher(normType, crossCheck)
+bf = cv2.BFMatcher(crossCheck=True)
+
+# 匹配
+# imgSrc：被匹配的图片
+# imgTemp：模板
+# res：DMatch类型的数组
+# match(imgSrc,imgTemp) -> res:list
+matchRes = bf.match(des1,des2)
+matchRes = sorted(matchRes,key=lambda x:x.distance)
+
+# 绘制匹配
+# drawMatches(img1, keypoints1, img2, keypoints2, matches1to2, 
+#           outImg[, matchColor[, singlePointColor[, matchesMask[, flags]]]]) -> outImg
+imgMatch = cv2.drawMatches(img1,kp1,img2,kp2,matchRes[:15],None,flags=2)
+```
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/SIFT_match.jpg" width="50%" align="middle" /></p>
+
+
+- <a href="https://docs.opencv.org/3.4/d4/de0/classcv_1_1DMatch.html" class="jump_link"> DMatch类 </a>：匹配返回的结果
+    - `DMatch.queryIdx`：对应匹配第一张输入图片（imgSrc）的 `KeyPoint` 对象的索引
+    - `DMatch.trainIdx`：对应匹配第二张输入图片（imgTemp）的 `KeyPoint` 对象的索引
+    - `DMatch.distance`：关键点描述符的距离
+- <a href="https://docs.opencv.org/3.4/de/d30/structcv_1_1DrawMatchesFlags.html" class="jump_link">  `DrawMatchesFlags` </a>：控制匹配结果如何绘制
+
+
+## 3.3. 1对多匹配
+
+- **k对最佳匹配**：每一个特征点在另一张图片上都会有多个最匹配的点存在，即同一个特征点对应多个匹配对象。实现方法与1对1匹配大同小异。
+
+```python
+# 建立匹配算法
+bf = cv2.BFMatcher()
+
+# 匹配
+# k：一张图的关键点可以与另一张图的 k 个关键点相匹配
+# knnMatch(imgSrc,imgTemp,k) -> res:tuple
+matchRes = bf.knnMatch(des1,des2,k=2)
+
+# 筛选匹配，获得最佳匹配
+goodMatchs=[]
+for m, n in matchRes:
+    if m.distance < 0.75*n.distance:
+        goodMatchs.append([m]) 
+
+# 绘制匹配
+# drawMatchesKnn(img1, keypoints1, img2, keypoints2, matches1to2, 
+#           outImg[, matchColor[, singlePointColor[, matchesMask[, flags]]]]) -> outImg
+imgMatch = cv2.drawMatchesKnn(img1,kp1,img2,kp2,goodMatchs,None,flags=2)
+```
+
+- **`BFMatcher`**：不用启用交叉检测，之后的筛选匹配步骤就能规避
+- **`knnMatch`结果**：该匹配算法返回的结果为`tuple`，是一组`DMatch`类型。其含义为一张图片中的一个关键点与另一张图片关键点的 k 个对应值。
+- **筛选匹配：** 每一个特征点（设为A）都有最匹配的另外两个特征点在另一张图上，设为B和C。其中AB的距离最短，AC的距离次短。那么规定，如果AB间的距离小于AC间距离的0.75倍，则认为AB的匹配度远远大于A与其他任何点的匹配度，则将AB两点连起来。
+

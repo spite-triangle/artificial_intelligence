@@ -26,9 +26,10 @@
     python36    C:\ProgramData\jupyter\kernels\python36
     (base) triangle@LEARN:~$ jupyter kernelspec remove 内核名 // 移除内核
    ```
-5. 在指定`Python`版本的环境中安装 `OpenCV`。<span style="color:red;font-weight:bold"> 推荐安装 3.4.2 之前版本的  OpenCV 因为新版有些算法不在支持开源；安装时需要使用 pip ，而非 pip3 ，否则可能搜索不到下面这个版本。</span>
+5. 在指定`Python`版本的环境中安装 `OpenCV`。<span style="color:red;font-weight:bold"> `opencv-contrib-python`直接用最新版，SIFT 的专利已经过期，用之前的`3.4.1`版本，可能有问题。`opencv-python`也可以直接用最新版</span>
     ```term
-    triangle@LEARN:~$ pip install opencv-python==3.4.1.15 opencv-contrib-python==3.4.1.15
+    triangle@LEARN:~$ pip install opencv-python opencv-contrib-python // 直接装最新的
+    triangle@LEARN:~$ pip install opencv-python==版本号 opencv-contrib-python==版本号 // 选择版本
     ```
 
 # OpenCV 界面
