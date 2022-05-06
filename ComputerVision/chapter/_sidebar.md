@@ -12,3 +12,4 @@
 - [第六章 图像形态学](ComputerVision/chapter/morphology_withNum.md)
 - [第七章 图像处理](ComputerVision/chapter/imageProcess_withNum.md)
 - [第八章 图像特征](ComputerVision/chapter/imageFeature_withNum.md)
+- [第九章 运动检测](ComputerVision/chapter/motion_withNum.md)
