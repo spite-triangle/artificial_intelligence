@@ -22,7 +22,7 @@ cv2.destroyAllWindows()
 # %% 高斯混合模型
 import cv2
 
-video = cv2.VideoCapture('./asset/test.mp4')
+video = cv2.VideoCapture('./asset/diffFrame.mp4')
 
 # 高斯混合模型
 GaussModel = cv2.createBackgroundSubtractorMOG2()
@@ -44,8 +44,6 @@ while video.isOpened():
         break
 
     frame = cv2.resize(frame,(0,0),fx=0.5,fy=0.5)
-
-    print(frame.shape)
 
     # 高斯混合
     fgMask = GaussModel.apply(frame)
