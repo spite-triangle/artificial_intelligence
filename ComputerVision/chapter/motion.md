@@ -233,3 +233,12 @@ curPoints,statas,err = cv2.calcOpticalFlowPyrLK(lastFrameGray,curFrameGray,lastP
 <p style="text-align:center;"><img src="../../image/computerVision/opticalFlow.gif" width="40%" align="middle" /></p>
 
 <!-- panels:end -->
+
+# 目标追踪
+
+OpenCV 自带的算法太旧，精度也不行，所以直接忽略，推荐学习比较新的
+- YOLO
+- Faster-Rcnn
+- Mask-Rcnn
+
+

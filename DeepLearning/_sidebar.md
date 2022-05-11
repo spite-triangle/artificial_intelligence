@@ -7,6 +7,8 @@
 - [第二章 改善神经网络](./DeepLearning/chapter/improveNetwork.md)
 - [第三章 机构化机器学习](./DeepLearning/chapter/MLStratagy.md)
 - [第四章 卷积神经网络](./DeepLearning/chapter/convolution.md)
+- [第五章 支持向量机](./DeepLearning/chapter/SVM.md)
+
 - [附录 符号](./DeepLearning/chapter/symbol.md)
 
 
