@@ -638,3 +638,66 @@ imgMatch = cv2.drawMatchesKnn(img1,kp1,img2,kp2,goodMatchs,None,flags=2)
 - **`knnMatch`结果**：该匹配算法返回的结果为`tuple`，是一组`DMatch`类型。其含义为一张图片中的一个关键点与另一张图片关键点的 k 个对应值。
 - **筛选匹配：** 每一个特征点（设为A）都有最匹配的另外两个特征点在另一张图上，设为B和C。其中AB的距离最短，AC的距离次短。那么规定，如果AB间的距离小于AC间距离的0.75倍，则认为AB的匹配度远远大于A与其他任何点的匹配度，则将AB两点连起来。
 
+# 4. HOG 特征描述
+
+## 4.1. 介绍
+
+**方向梯度直方图 HOG （histogram of oriented gradients）**：可以用来表示图像的物体特征，因此能够用于物体检测。方向梯度直方图？没错，实现思路就与 <a href="../../ComputerVision/chapter/imageFeature_withNum.md" class="jump_link"> SIFT 算法 </a> 中的关键点方向直方图近似。
+
+## 4.2. HOG特征计算
+
+1. 图片预处理，从图片中截取出目标。以下步骤中，目标图片大小为 `64 x 128` 。
+
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/HOG_preprocess.png" width="75%" align="middle" /></p>
+
+2. 利用 Soble 算子，计算目标图片在横向与纵向上的梯度图
+
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/HOG_soble.png" width="50%" align="middle" /></p>
+
+3. 根据横向方向的梯度 $g_x$ 与 纵向方向上的梯度 $g_y$ 计算总梯度和梯度方向
+    $$
+    \begin{aligned}
+        g &= \sqrt{g_x^2 + g_y^2} \\
+        \theta &= \arctan (\frac{g_x}{g_y})
+    \end{aligned}
+    $$
+
+4. 将原来的 `64 x 128` 的图像划分为一个个 `8x8` 的单元（图中的一块绿色方格）。然后对每一个`8x8` 的单元格分别进行直方图统计，直方图的横坐标为梯度方向，纵坐标可以为梯度的累加值、该方向上梯度出现次数等。
+    
+    **对于梯度方向的取值范围为 $0^\circ \sim 180^\circ$ 并非 $0^\circ \sim 360^\circ$，因为 $\alpha$ 与 $\alpha + 180^\circ$ 其实位于同一直线上，只是方向不同，所以就将 $\alpha$ 与 $\alpha + 180^\circ$ 同一看作是 $\alpha$ 方向。** 假设梯度方向被划分为了`9`个部分，那么 `8x8`的像素块经过一次方向梯度直方图统计就被压缩为 `9x1` 的向量。这样对 `64x128` 图片的 `8x16` 个绿色格子全部进行直方图统计，就能得到`128` 个 `9x1` 的向量。至此，就将原图 `64x128x3 = 24576` 的像素值压缩成了 `128x9x1 = 1152 ` 的向量。
+
+    从上面的操作可以看出，<span style="color:red;font-weight:bold"> 方向梯度直方图实现了对图片特征的压缩提取。 </span>
+
+    <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/HOG_histogram.png" width="75%" align="middle" /></p>
+
+<!-- panels:start -->
+<!-- div:left-panel -->
+
+5. 上述 `8x8` 单元格的直方图统计后，得到的结果对「光线变化」敏感（光线影响体现在像素的数值变化，当像素的数值发生变化，就会导致梯度的幅值和方向发生改变）。特征描述符对光线敏感，这对物体特征描述是不利的（图片上的光影一变化，特征描述符号就变了，这肯定不行的）。**因此，还需要对上述的方向梯度直方图统计结果进行「归一化」处理，排除光线的干扰。** 
+
+    将四个绿色格子`8x8`组成一个蓝色的滑动窗口`16x16`，这样在一个滑动窗口中，就存在 `4x9x1 = 36x1` 的向量
+    $$
+    V = [a_1,\dotsm,a_{36}]
+    $$
+
+    计算该向量中，所有分量的均方根
+
+    $$
+    K = \sqrt{ V^T V }
+    $$
+    
+    对该向量 $V$ 进行归一化
+
+    $$
+    V_{norm} = \frac{V}{K}
+    $$
+
+<!-- div:right-panel -->
+
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/hog-16x16-block-normalization.webp" width="25%" align="middle" /></p>
+
+<!-- panels:end -->
+
+6. 利用蓝色的滑动窗口`16x16`，对图片中的所有绿色单元格`8x8`进行归一化，最终得到 「HOG特征描述符」。
+    
+    对于`64x128`的图片，蓝色滑动窗口在横向要滑动 `7` 次；在纵向要滑动 `15` 次。滑动窗口进行一次归一化，可以得到 `36x1` 的向量，当滑动窗扫描完整张图片，可以得到 `7x15x36x1=3782x1`的向量。**最终得到的这个`3780x1`的向量，就是当前`64x128`目标图片的「HOG描述符」。**

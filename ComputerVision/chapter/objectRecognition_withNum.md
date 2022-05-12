@@ -80,8 +80,11 @@ faces = detector.detectMultiScale(frameGray,1.2,3,0)
 > - <a href="http://dlib.net/" class="jump_link"> dlib 官网 </a>
 > - <a href="https://github.com/sachadee/Dlib" class="jump_link"> python 3.7 ~ 3.9 编译好版本 </a>
 > - <a href="https://pypi.org/simple/dlib/" class="jump_link"> python 3.4 ~ 3.6 编译好版本 </a>
+> - <a href="https://www.bilibili.com/video/BV1Ht4y1U7Do" class="jump_link"> 自己编译 </a>
 
 ## 2.2. 人脸检测
+
+人脸检测的内部实现靠的就是 HOG 描述符、SVM 等算法实现。
 
 ```python
 # 获取默认的检测
@@ -98,8 +101,50 @@ y2 = rectangle.top()  # top y value
 x1 = rectangle.left()  # left x value
 x2 = rectangle.right()  # right x value
 ```
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlibDetect.gif" width="50%" align="middle" /></p>
+
+## 2.3. 人脸特征
+
+- <a href="http://dlib.net/files/" class="jump_link"> dlib 人脸关键点预测模型 </a>
+
+- <a href="https://blog.csdn.net/YeziTong/article/details/86177846" class="jump_link"> 具体实现 </a>
 
 
+**获取特征点：**
+
+```python
+# 加载关键点预测器
+predictor:dlib.shape_predictor = dlib.shape_predictor('./asset/shape_predictor_68_face_landmarks.dat')
+
+# 预测关键点
+points: dlib.full_object_detection = predictor(img,face)
+
+# 遍历点
+for i in range(len(points.parts())):
+    point:dlib.point = points.part(i)
+    # x 坐标
+    point.x
+    # y 坐标
+    point.y
+```
+
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlib_facePoints.png" width="50%" align="middle" /></p>
+
+**对于 dlib 通过模型找出的人脸特征点，输出结果是具有顺序的。通过对应位置的特征点，我们就能标记出眼睛、鼻子、嘴巴、眉毛的位置。** <span style="color:red;font-weight:bold"> 图上特征点的索引是从`1`开始的，在编程的时候，数组索引是从`0`开始的。 </span>
+
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlib_pointNumber.png" width="50%" align="middle" /></p>
+
+**特征点连线：**
+
+```python
+# 转化点的类型
+pts = np.array([( point.x,point.y )for point in points.parts()],dtype=np.int32)
+
+# 左眼提取点全部连起来
+cv2.polylines(img, [pts[36:42]], True,(255,0,0),2)
+```
+
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlib_eye.png" width="50%" align="middle" /></p>
 
 
 # 附录：协方差矩阵

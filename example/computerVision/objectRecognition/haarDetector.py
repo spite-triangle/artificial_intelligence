@@ -5,7 +5,7 @@ video = cv2.VideoCapture('./asset/face.mp4')
 
 # 加载模型
 faceDetector = cv2.CascadeClassifier('./asset/haarcascade_frontalcatface.xml')
-
+eyeDetector = cv2.CascadeClassifer('./asset/haarcascade_eye.xml')
 
 while video.isOpened():
     # 读取

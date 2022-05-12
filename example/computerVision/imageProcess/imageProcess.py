@@ -14,6 +14,7 @@ print(img.shape,imgDown.shape,imgUp.shape)
 import cv2
 import numpy as np
 # 读取图片
+
 img = cv2.imread('./morphology.jpg')
 # 灰度图
 imgGray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
@@ -21,12 +22,15 @@ imgGray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 retval,imgBinary = cv2.threshold(imgGray,127,255,cv2.THRESH_BINARY)
 
 # 提取轮廓
-binary,contours, hierarchy=cv2.findContours(imgBinary,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+contours, hierarchy=cv2.findContours(imgBinary,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
 
 # 绘制轮廓
 # drawContours(image, contours, contourIdx, color[, thickness[, lineType[, hierarchy[, maxLevel[, offset]]]]]) -> image
 canva = img.copy()
-cv2.drawContours(canva,contours,-1,(0,0,255),2)
+
+cnt = np.array([[[1,1]],[[100,100]]],dtype=np.int32)
+
+cv2.drawContours(canva,(cnt),-1,(0,0,255),10)
 
 cv2.imshow('contours',canva)
 

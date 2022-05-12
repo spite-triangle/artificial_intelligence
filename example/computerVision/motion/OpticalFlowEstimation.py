@@ -3,6 +3,7 @@ import numpy as np
 
 video = cv2.VideoCapture('./asset/opticalFlow.mp4')
 
+
 # 视频保存格式
 videoForm = cv2.VideoWriter_fourcc(*'mp4v')
 # 保存视频的类，输入参数为：

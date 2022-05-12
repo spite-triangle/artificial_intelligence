@@ -5,12 +5,12 @@
 - **支持向量机**（support vector machines, SVM）：一种二分类模型，它的基本模型是定义在特征空间上的间隔最大的线性「分类器」，间隔最大使它有别于感知机；SVM还包括「核」技巧，这使它成为实质上的非线性分类器。
 
 - **分类基本思想：** 根据高中数学知识，可以知道在二维平面上画一直线 $f(x,y)=0$ ，就能将平面划分为两个部分：直线上方 $f(x,y) > 0$ ；直线下方 $f(x,y) < 0$。**根据这个特性就能通过一条直线将平面的内的数据点 $(x,y)$ 划分为两个区域，即实现了分类。** 
-    <p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/svm_idea.jpg" width="50%" align="middle" /></p>
+    <p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/svm_idea.jpg" width="50%" align="middle" /></p>
 
 
 - **支持向量机思想：** SVM 的目标是对未知的输入数据也实现分类，这就使得「超平面」的鲁棒性要好。因此，SVM 在「决策超平面」的基础上，引入了「正超平面」与「负超平面」，正负超平面与决策超平面之间就形成了两个缓冲区域。决策超平面两侧的缓冲区域越宽，就说明数据的差异越大，那么利用决策超平面对数据进行分类时，准确度也越高。
 
-    <p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/svm_plane.png" width="50%" align="middle" /></p>
+    <p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/svm_plane.png" width="50%" align="middle" /></p>
 
 - **超平面：** 二维数据通过直线能分为两部分；三维数据能通过平面划分为两部分。对数据进行划分的界限就称之为「超平面」。
     $$
@@ -51,7 +51,7 @@
 ## 2.1 模型介绍
 
 - **思想：** 为了更好的区分两边的数据，就需要决策超平面与正负超平面之间的距离（间隔）最大。**最好的情况就是，正负超平面就在两边样本值的边界上，决策超平面就在正负超平面的中间，这样就能实现间隔 $d$ 最大。** 
-    <p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_hardMargin.png" width="50%" align="middle" /></p>
+    <p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_hardMargin.png" width="50%" align="middle" /></p>
 - **支持向量：** 处于正/负超平面上的样本点。
 
 - **优化目标：** 找出 $W,b$ 使得间隔距离 $d$ 最大。**从图中也可以看出，距离 $d$ 取决于样本中的「支持向量」**
@@ -60,7 +60,7 @@
 
 **寻优目标是使得 $d$ 最大化，因此首先得求解出 $d$。**
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_d.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_d.png" width="50%" align="middle" /></p>
 
 假设在正/负超平面上取得两个支持向量分别为 $X_m$ 、 $X_n$，则正负超平面满足
 
@@ -108,7 +108,7 @@ $$
 
 **确保所找到的超平面的有效性，就需要将两类数据分别限制在正负超平面的两边。**
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_constraint.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_constraint.png" width="50%" align="middle" /></p>
 
 对两边的样本建立标签值
 - $y = -1$ 时，为负超平面一方的样本，即满足 $W^T X + b \le - 1$
@@ -258,9 +258,9 @@ $$
 
 ## 3.1 概念
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_nolineCategory.png" width="25%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_nolineCategory.png" width="25%" align="middle" /></p>
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_kernel.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_kernel.png" width="50%" align="middle" /></p>
 
 - **思想：** 在二维平面，非线性的分类问题无法再通过二维的超平面进行分割，**但是，将二维数据升维变为三维数据，这样就能通过三维空间中的超平面，实现对数据的分类。**
 
@@ -313,7 +313,7 @@ $$
 
 **其中，$c$ 值不要选择 $0$ 。**
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_polynomialKernel.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_polynomialKernel.png" width="75%" align="middle" /></p>
 
 ## 3.3 高斯核函数
 
@@ -329,18 +329,18 @@ $$
 - **含义：** 高斯核函数描述了样本 $X_i、X_j$ 的相似程度，样本越相似 $K(X_i, X_j)$ 的值越大。
   - $\gamma$：控制样本值 $X_i、X_j$ 要多靠近，才能产生较高的相似度。$\gamma$ 越大，$X_i、X_j$ 要足够靠近，才会评判两个样本有较高相似度。
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_GaussKernelGamma.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_GaussKernelGamma.png" width="50%" align="middle" /></p>
 
 
 - **特点：** <span style="color:red;font-weight:bold"> 高斯核函数可以将，转换后的维度扩展到无限。 </span> 
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_GaussInfinite.png" width="75%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_GaussInfinite.png" width="75%" align="middle" /></p>
 
 # 4. 软间隔模型
 
 ## 4.1 模型介绍
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_softMargin.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_softMargin.png" width="50%" align="middle" /></p>
 
 - **硬间隔的缺陷：** 在硬间隔中，我们认为所有的样本点都没有误差，但是，**当样本点中存在误差时（如图所示产生损失的黄点），就会直接导致正/负超平面间隔的减少（正/负超平面的位置取决于「支持向量」，即边界样本点）。**
 
@@ -348,7 +348,7 @@ $$
 
 ## 4.2 铰链损失函数
 
-<p style="text-align:center;"><img src="artificial_intelligence/image/neuralNetwork/SVM_error.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="./artificial_intelligence/image/neuralNetwork/SVM_error.png" width="50%" align="middle" /></p>
 
 - 有误差点的损失程度：根据约束条件可知，当样本点不在自己的分类区域时 
     $$
