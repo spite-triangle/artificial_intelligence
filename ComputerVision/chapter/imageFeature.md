@@ -694,7 +694,7 @@ imgMatch = cv2.drawMatchesKnn(img1,kp1,img2,kp2,goodMatchs,None,flags=2)
 
 <!-- div:right-panel -->
 
-<p style="text-align:center;"><img src="../../image/computerVision/hog-16x16-block-normalization.webp" width="25%" align="middle" /></p>
+<p style="text-align:center;"><img src="../../image/computerVision/hog-16x16-block-normalization.webp" width="50%" align="middle" /></p>
 
 <!-- panels:end -->
 

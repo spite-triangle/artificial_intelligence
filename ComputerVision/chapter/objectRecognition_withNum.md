@@ -103,14 +103,42 @@ x2 = rectangle.right()  # right x value
 ```
 <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlibDetect.gif" width="50%" align="middle" /></p>
 
-## 2.3. 人脸特征
+## 2.3. 人脸追踪
+
+上述的人脸检测步骤其实只适用于「单张图片」的人脸检测，如果对视频的每一帧都使用同样的方法一帧图片一帧图片检测，在 dlib 中可能会很慢。为了加快视频中的人脸检测，可以采用追踪的方式。
+
+```python
+# 获取默认的检测
+detector = dlib.get_frontal_face_detector()
+
+# 追踪器
+tracker = dlib.correlation_tracker()
+
+# 定位人脸
+face:dlib.rectangle = detector(frame,0)[0]
+
+# 启动追踪
+tracker.start_track(frame,face)
+
+# 更新追踪
+tracker.update(frame)
+# NOTE -  追踪的结果为浮点数，需要转为整型
+face:dlib.drectangle = tracker.get_position()
+```
+
+> [!tip|style:flat]
+> - 追踪器其实只要初始化时，给定一个 `dlib.rectangle`位置，之后就会追踪这个区域，因此，只要初始化时，给定一个目标位置，追踪器就能够对目标进行追踪，不一定非得是人脸。
+> - 当被追踪的目标跑出画面后，然后又跑回来，追踪器就可能追踪不了了。
+
+
+## 2.4. 人脸特征位置
 
 - <a href="http://dlib.net/files/" class="jump_link"> dlib 人脸关键点预测模型 </a>
 
 - <a href="https://blog.csdn.net/YeziTong/article/details/86177846" class="jump_link"> 具体实现 </a>
 
 
-**获取特征点：**
+**获取特征点位置：**
 
 ```python
 # 加载关键点预测器
@@ -145,6 +173,100 @@ cv2.polylines(img, [pts[36:42]], True,(255,0,0),2)
 ```
 
 <p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlib_eye.png" width="50%" align="middle" /></p>
+
+## 2.5. 人脸识别
+
+> - <a href="http://dlib.net/files/" class="jump_link"> 残差神经网络模型 </a>
+
+**实现步骤：**
+1. 检测出人脸位置
+2. 预测出人脸的特征点位置
+3. 将特征点通过残差神经网络转化为`128`维的特征描述符
+4. 对比两张人脸图片的特征描述符（最简单的方法就是计算欧式距离），就能确定两个图片是否为同一个人
+
+```python
+# 加载残差神经网络模型
+encoder = dlib.face_recognition_model_v1('./asset/dlib_face_recognition_resnet_model_v1.dat')
+
+# 生成 128 维的特征描述符 
+description = encoder.compute_face_descriptor(img,keypointsLoc,jet)
+```
+
+<details>
+<summary><span class="details-title">案例代码</span></summary>
+<div class="details-content"> 
+
+```python
+import dlib
+import numpy as np
+import  cv2
+
+def preprocess(path,fx=0.5,fy=0.5):
+    img = cv2.imread(path)
+    img = cv2.resize(img, (0,0),fx=fx,fy=fy)
+    imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    return (img,imgGray)
+
+def imshow(img,title='untitled'):
+    cv2.imshow(title, img)
+    cv2.waitKey(0)
+
+def lableFaces(canvas,facesLocs):
+    for face in facesLocs:
+        y1 = face.bottom()  # detect box bottom y value
+        y2 = face.top()  # top y value
+        x1 = face.left()  # left x value
+        x2 = face.right()  # right x value
+        cv2.rectangle(canvas,(x1,y1),(x2,y2),(0,0,255),2)
+
+def facesKeypointDescritptions(img,imgGray,facesLocs,predictor,encoder,jet=1):
+    # 特征点位置
+    keypointsLocs = [predictor(img,faceLoc) for faceLoc in facesLocs]
+
+    # 获取描述符
+    return np.array([encoder.compute_face_descriptor(img,keypointsLoc,jet) for keypointsLoc in keypointsLocs])
+
+if __name__ == '__main__':
+    # 载入图片
+    facesImg,facesImgGray = preprocess('./asset/faces.jpg')
+    targetImg,targetImgGray = preprocess('./asset/mads.png')
+
+    # 人脸检测器
+    detector = dlib.get_frontal_face_detector()
+
+    # 特征点预测器
+    predictor = dlib.shape_predictor('./asset/shape_predictor_68_face_landmarks.dat')
+
+    # 特征描述生成模型
+    encoder = dlib.face_recognition_model_v1('./asset/dlib_face_recognition_resnet_model_v1.dat')
+    
+    #  标定人脸位置
+    facesLocs = detector(facesImgGray,0)
+    targetLocs = detector(targetImgGray,0)
+
+    # 获取人脸特征描述
+    facesDescriptions = facesKeypointDescritptions(facesImg,facesImgGray, facesLocs, predictor, encoder)
+    targetDescription = facesKeypointDescritptions(targetImg,targetImgGray, targetLocs, predictor, encoder)
+
+    print(facesDescriptions.shape)
+    print(targetDescription.shape)
+
+    # 描述符对比，计算欧氏距离
+    distances = np.linalg.norm(facesDescriptions - targetDescription,axis=1)
+
+    print(np.argmin(distances))
+
+    # 将结果标记出来
+    lableFaces(facesImg, [facesLocs[np.argmin(distances)]])
+
+    imshow(facesImg)
+    imshow(targetImg)
+``` 
+
+</div>
+</details>
+
+<p style="text-align:center;"><img src="/artificial_intelligence/image/computerVision/dlib_faceRecognition.png" width="75%" align="middle" /></p>
 
 
 # 附录：协方差矩阵
