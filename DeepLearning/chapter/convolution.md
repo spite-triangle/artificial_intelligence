@@ -182,7 +182,7 @@ $$
 > * **parameter sharing**：用于一次过滤的过滤器都是一样的，数据处理过程统一，也降低了超参数的量。
 > * **sparsity of connection**：每个像素只能影响局部的结果，符合常规认知。
 
-# 1x1 卷积
+# 四、1x1 卷积
 
 <p style="text-align:center;"><img src="/artificial_intelligence/image/neuralNetwork/convolution1x1.png" width="75%" align="middle" /></p>
 
