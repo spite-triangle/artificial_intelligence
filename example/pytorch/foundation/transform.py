@@ -73,6 +73,3 @@ writer.close()
 
 loader = torch.utils.data.DataLoader(dataset=assets,batch_size=2,shuffle=False,drop_last=False)
 
-for item in loader:
-
-    print(len(item))

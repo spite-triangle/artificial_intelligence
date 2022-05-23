@@ -9,7 +9,7 @@
 - **使用**：以 CIFAR10 数据集为例，其他数据集类似
     ```python
     # root：数据存放路径
-    # train：作为训练集，还是测试集
+    # train：区分训练集，还是测试集
     # transform：对数据集中的图进行预处理
     # target_transfrom：对期望输出进行预处理
     # download：从网上直接下载数据集
