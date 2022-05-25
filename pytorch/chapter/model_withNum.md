@@ -29,6 +29,7 @@ class Model(torch.nn.Module):
 # 创建模型
 model = Model()
 
+
 # 模型前向传播
 x = torch.ones((3,32))
 
@@ -240,38 +241,42 @@ optimizer.step()
 
 - **思路：** 网络模型、数据（样本与标签）、损失函数全部添加到GPU中
 - 实现：
-  -  `to()`
-    ```python
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # 模型
-    model = Model()
-    model = model.to(device)
+    -  `to()`
+  
+        ```python
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # 损失函数
-    lossFcn = torch.nn.CrossEntropyLoss()
-    lossFcn = lossFcn.to(device)
+        # 模型
+        model = Model()
+        model = model.to(device)
 
-    # 数据
-    datas = datas.to(device)
-    ```
-  - `cuda()`
-    ```python
-    # 模型
-    model = Model()
-    model = model.cuda()
+        # 损失函数
+        lossFcn = torch.nn.CrossEntropyLoss()
+        lossFcn = lossFcn.to(device)
 
-    # 损失函数
-    lossFcn = torch.nn.CrossEntropyLoss()
-    lossFcn = lossFcn.cuda()
+        # 数据
+        datas = datas.to(device)
+        ```
+    
+    - `cuda()`
 
-    # 数据
-    datas = datas.cuda()
-    ```
+        ```python
+        # 模型
+        model = Model()
+        model = model.cuda()
+
+        # 损失函数
+        lossFcn = torch.nn.CrossEntropyLoss()
+        lossFcn = lossFcn.cuda()
+
+        # 数据
+        datas = datas.cuda()
+        ```
 
 ## 4.2. 加载模型
 
-**对「GPU」训练的模型，想要在「CPu」上进行测试时，需要在加载时进行转换**
+**对「GPU」训练的模型，想要在「CPU」上进行测试时，需要在加载时进行转换**
 ```python
 model = torch.load('../model/cifar_19.pth',map_location=torch.device('cpu'))
 ```
