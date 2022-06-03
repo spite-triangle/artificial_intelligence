@@ -1,3 +1,4 @@
 example/computerVision/objectRecognition/asset/shape_predictor_68_face_landmarks.dat
 example/computerVision/objectRecognition/asset/dlib_face_recognition_resnet_model_v1.dat
 test.md
+example/detectMask/*
