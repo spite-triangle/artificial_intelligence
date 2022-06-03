@@ -42,12 +42,12 @@ LAMBDA_CONF = 5000
 LAMBDA_CLASS = 500
 
 # 是否存在待检测目标的阈值
-THRESH_OBJ = 0.6
+THRESH_OBJ = 0.5
 # 极大值抑制阈值
 # Note - 小于该阈值的预测框会保留，大于该值的预测框会被剔除
-THRESH_NMS = 0.4
+THRESH_NMS = 0.5
 # score 过滤阈值
-THRESH_SCORE = 0.6
+THRESH_SCORE = 0.5
 # 预测框最小尺寸限制
 THRESH_BOX_MIN_SIZE = 8
 # 每个分类，最多有多少个预测框进行极大值抑制的筛选

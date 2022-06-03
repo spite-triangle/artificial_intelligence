@@ -52,6 +52,9 @@ if __name__ == '__main__':
 
     model = torch.load('./asset/weightsBackup/yolov3_model_2022_06_03_12_56_50.pth',map_location=torch.device(config.RUN_DEVICE))
 
+    # 均衡化
+    clahe = cv2.createCLAHE(2,(8,8))
+
     # 读取视频
     video = cv2.VideoCapture('./asset/videos/mask.mp4')
 
@@ -68,9 +71,14 @@ if __name__ == '__main__':
         # 缩放图片
         frame = cv2.resize(frame,(0,0),fx=0.5,fy=0.5)
 
+        # 均衡化
+        yuv = cv2.cvtColor(frame,cv2.COLOR_BGR2YUV)
+        yuv[:,:,0] = clahe.apply(yuv[:,:,0])
+        cframe = cv2.cvtColor(yuv,cv2.COLOR_YUV2BGR)
+
         time_start = time.time()  # 记录开始时间
         # 检测目标
-        objs,padding,scale = detectObjsFromFrame(model,frame)
+        objs,padding,scale = detectObjsFromFrame(model,cframe)
         if objs is not None:
             frame = ImageProcess.drawBoundingBoxsAndClasses(frame,objs,padding,scale)
 
@@ -80,6 +88,7 @@ if __name__ == '__main__':
         frame = ImageProcess.drawText(frame,[int(frame.shape[1] * 0.05),int(frame.shape[0] * 0.05)],'FPS: {}'.format( np.round(1/time_sum,2)))
 
         cv2.imshow('video',frame)
+        # cv2.imshow('video1',cframe)
 
         # 控制播放速度：以 60 帧的速度进行图片显示
         if cv2.waitKey(1) == ord('q'):
