@@ -1,0 +1,26 @@
+<annotation>
+	<folder>image_mask</folder>
+	<filename>0476.jpg</filename>
+	<path>/home/hamlin/Study/Deep Learning/mask/dataset/image_mask/0476.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>960</width>
+		<height>540</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>have_mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>397</xmin>
+			<ymin>85</ymin>
+			<xmax>568</xmax>
+			<ymax>272</ymax>
+		</bndbox>
+	</object>
+</annotation>

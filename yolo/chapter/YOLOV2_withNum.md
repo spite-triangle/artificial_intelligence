@@ -75,12 +75,12 @@ $$
 
     $$
     \begin{aligned}
-        b_x = (\sigma(t_x) + C_x ) C_w \\
-        b_y = (\sigma(t_y) + C_y ) C_h \\
+        b_x = \sigma(t_x) + C_x \\
+        b_y = \sigma(t_y) + C_y \\
     \end{aligned}
     $$
 
-    其中 $(C_w,C_h)$ 为单元格对应原图的真实大小；$(C_x,C_y)$ 为单元格在输出网格中，左上角的坐标；<span style="color:red;font-weight:bold"> $\sigma()$ 为 sigmod 函数，为了将中心点限制在当前单元格内 </span>。
+    $(C_x,C_y)$ 为单元格在输出网格中，左上角的坐标；<span style="color:red;font-weight:bold"> $\sigma()$ 为 sigmod 函数，为了将中心点限制在当前单元格内 </span>。
 
     <p style="text-align:center;"><img src="/artificial_intelligence/image/yolo/sigmod.png" width="50%" align="middle" /></p>
 

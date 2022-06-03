@@ -1,0 +1,38 @@
+<annotation>
+	<folder>image_nomask</folder>
+	<filename>0098.jpg</filename>
+	<path>/home/hamlin/Study/Deep Learning/mask/dataset/image_nomask/0098.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>500</width>
+		<height>332</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>no_mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>110</xmin>
+			<ymin>110</ymin>
+			<xmax>195</xmax>
+			<ymax>229</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>no_mask</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>262</xmin>
+			<ymin>118</ymin>
+			<xmax>334</xmax>
+			<ymax>211</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -322,7 +322,114 @@ mat = torch.index_select(a, dim=0, index=torch.tensor([0]))
 # 在 dim 方向上，选择 index 对应的元素：下面操作同 a[i,index[i,j]]
 mat = torch.gather(a, dim=1, index=torch.tensor([ [2,3],[1,2] ]))
 ```
+## 5.4. 索引筛选
 
+- 在索引中写入数组：根据传入的数组拿出数据，然后根据拿出的顺序组合成新的数组
+
+    <!-- panels:start -->
+    <!-- div:left-panel -->
+    ```python
+    a = torch.rand((3,3,2))
+
+    # 两种写法等价
+    a[[0,1,0,0],:,:].shape
+    a[[0,1,0,0]].shape    
+    ```
+    
+    <!-- div:right-panel -->
+
+    ```term
+    triangle@LEARN:~$ python ./test.py
+    torch.Size([4, 3, 2])
+    torch.Size([4, 3, 2])
+    ```
+    <!-- panels:end -->
+
+- `bool` 遮罩：利用一个 `bool` 数组对目标 Tensor 进行标记
+
+    <!-- panels:start -->
+    <!-- div:left-panel -->
+   ```python
+    a = torch.rand((3,3,2))
+
+    # 与 a 同等 shape 的 bool 标记
+    mask = [[[False,  True],
+            [False, False],
+            [False,  True]],
+
+            [[False,  True],
+            [False,  True],
+            [False, False]],
+
+            [[False,  True],
+            [False, False],
+            [False, False]]]
+    a[mask].shape
+
+    # 对某一维度进行标记，bool 数组要和该维度的长度相等
+    mask = [True,False,True]
+    a[:,mask].shape
+    ```
+    
+    <!-- div:right-panel -->
+    ```term
+    triangle@LEARN:~$ python ./test.py
+    torch.Size([5])
+    torch.Size([3, 2, 2])
+    ```
+    <!-- panels:end -->
+
+- 特殊符号
+    <!-- panels:start -->
+    <!-- div:left-panel -->
+    ```python
+    a = torch.rand((3,3,2))
+
+    # : 表示对应维度的所有元素
+    a[:,:,0].shape
+    # ... 维度要从后向前看
+    a[...,1].shape
+    # 生成一个数组，等同于 [0,1] 
+    a[0:2].shape
+    ```
+    
+    <!-- div:right-panel -->
+    ```term
+    triangle@LEARN:~$ python ./test.py
+    torch.Size([3, 3])
+    torch.Size([3, 3])
+    torch.Size([2, 3, 2])
+    ```    
+    <!-- panels:end -->
+
+- 索引结果的维度变化
+
+
+    <!-- panels:start -->
+    <!-- div:left-panel -->
+    
+    ```python
+    a = torch.rand((3,3,2))
+
+    # 索引中存在常值，就为降维，有多少个常值，就降低几维
+    a[0,:,0].shape # 降 2 维
+    a[:,0].shape # 降 1 维
+
+    # 索引为数组时，维度不变
+    a[0].shape
+    a[[0]].shape # 和下面写法等价
+    a[0:1].shape
+    ```    
+    <!-- div:right-panel -->
+    ```term
+    triangle@LEARN:~$ python ./test.py
+    torch.Size([3])
+    torch.Size([3, 2])
+    torch.Size([3, 2])
+    torch.Size([1, 3, 2])
+    torch.Size([1, 3, 2])
+    ```
+    <!-- panels:end -->
 # 6. 变形
 
 ## 6.1. 组合拼接

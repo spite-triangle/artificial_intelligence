@@ -65,13 +65,12 @@ torch.nn.LazyLinear( out_features: int, bias: bool=True)
 
     $$
     \begin{aligned}
-    H_{\rm {out }} &=\left[\frac{H_{i n}+2 \times \rm { padding }[0]-\rm { dilation }[0] \times(\rm { kernel\_size }[0]-1)-1}{\operatorname{stride}[0]}+1\right]\\
-    W_{\rm {out }} &=\left[ \frac{W_{\rm {in }}+2 \times \rm { padding }[1]-\operatorname{dilation}[1] \times(\rm { kernel\_size }[1]-1)-1}{\rm { stride }[1]}+1 \right ]
+    H_{\rm {out }} &=\left\lfloor\frac{H_{i n}+2 \times \rm { padding }[0]-\rm { dilation }[0] \times(\rm { kernel\_size }[0]-1)-1}{\operatorname{stride}[0]}+1\right\rfloor\\
+    W_{\rm {out }} &=\left \lfloor \frac{W_{\rm {in }}+2 \times \rm { padding }[1]-\operatorname{dilation}[1] \times(\rm { kernel\_size }[1]-1)-1}{\rm { stride }[1]}+1 \right \rfloor
     \end{aligned}
     $$
 
 - **dilation：** 卷积核膨胀
-    <p style="text-align:center;"><img src="/artificial_intelligence/image/neuralNetwork/dilation.gif" width="25%" align="middle" /></p>
 
 - <a href="https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md" class="jump_link"> 每个参数的意义 </a>
 

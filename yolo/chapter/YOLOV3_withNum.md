@@ -12,6 +12,16 @@ YOLOV3 相对于 YOLOV2 而言，着重对网络结构进行了改进。
 
 <p style="text-align:center;"><img src="/artificial_intelligence/image/yolo/darknet53.png" width="75%" align="middle" /></p>
 
+<details>
+<summary><span class="details-title">主干网络参数</span></summary>
+<div class="details-content"> 
+
+<p style="text-align:center;"><img src="/artificial_intelligence/image/yolo/yolo3_darknet53.webp" width="75%" align="middle" /></p>
+
+
+</div>
+</details>
+
 # 2. Anchor Box
 
 对于三类预测结果而言，不同尺度的预测结果具有不同的「感受野」
@@ -38,12 +48,17 @@ YOLOV3 相对于 YOLOV2 而言，着重对网络结构进行了改进。
 
 # 4. 损失函数
 
-<p style="text-align:center;"><img src="/artificial_intelligence/image/yolo/yolov3_sample.png" width="50%" align="middle" /></p>
+<p style="text-align:center;"><img src="/artificial_intelligence/image/yolo/yolov3_selectAnchor.png" width="50%" align="middle" /></p>
 
-- **预测结果 bounding box 种类划分**：与样本的真实 bounding box 计算 IOU
-  - **正样本：** 对于同一个目标，IOU 最大的 bounding Box
-  - **舍弃的样本：** 对于同一个目标，IOU 不是最大值的 bounding Box
-  - **负样本：** IOU 小于阈值的的 bounding box
+- **预测框种类划分**：假设 Ground True Box 与 Anchor Box 中心重合，然后计算 IOU。（**这里就能实现，对预先给定的 Anchor Box 进行筛选**）
+  - **正样本：** Ground True Box 对应位置；IOU 最大。虚线框
+  - **舍弃的样本：** Ground True Box 对应位置；IOU 并非最大，但是又大于指定阈值。点虚线框
+  - **负样本：** 所在单元格没有 Ground True Box。黄色框
+
 
 - **损失函数**
     <p style="text-align:center;"><img src="/artificial_intelligence/image/yolo/yolov3_loss.png" width="100%" align="middle" /></p>
+
+> [!note|style:flat]
+> - 在损失函数的实际实现时，置信度使用的时「BCE 损失函数」，分类使用的是「CE 损失函数」
+> - **别被上面的公式所误导，正负样本的置信度损失要一起计算，即放到同一个「BCE函数」进行计算，若分开实现的话，训练效果很扯淡 (￣_￣|||)**
