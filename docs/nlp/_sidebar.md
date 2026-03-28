@@ -10,5 +10,6 @@
 - [第五章 Transformer](./nlp/chapter/transformer.md)
 - [第六章 MCP](./nlp/chapter/mcp.md)
 - [第七章 Agent](./nlp/chapter/agent.md)
+- [第八章 llama.cpp](./nlp/chapter/llama.md)
 
 
