@@ -11,7 +11,7 @@
 - 深度学习
 - 强化学习
 - 计算机视觉
-- 大模型、Transformer、MCP、Agent
+- 大模型、Transformer、MCP、Agent、llama.cpp
 
 [GitHub](https://github.com/spite-triangle)
 [Read](./README.md)

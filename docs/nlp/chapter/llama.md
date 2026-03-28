@@ -142,13 +142,9 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
 ## 通用参数
 
 
-- 模型控制
+- 模型参数
   - `-c, --ctx-size N` : 设置模型推理的上下文长度，**需要根据机器、模型情况进行估算，设置太长会导致推理降速、卡死**
   - `--rope-scale N`: 如果模型支持 `RoPE` 扩展上下文，则实际上下文长度是 `ctx-size * rope-scale`
-  - `-n, --predict, --n-predict N` : 模型推理生成的 token 数
-    - `-1`: 自动挡
-    - `-2`: 直到上下文总是达到 `--ctx-size` 时停止，遇到 `EOS` 时不停止，**主要用于测试**
-    - `N` : 最大生成上限，当遇到 `EOS` 时会提前停止
 - 参数分配
   - `-ngl, --gpu-layers, --n-gpu-layers N`: CPU 与 GPU 混合使用，在显存中只加载部分模型，剩下的放到内存
   - `-sm, --split-mode {none,layer,row}`: 控制多 GPU 推理模式
@@ -164,7 +160,7 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
     triangle@LEARN:~$ ./llama-cli -m model.gguf -ot "blk\.([0-9])\.=CUDA0,exps=CPU" 
     ```
 
-- 推理控制
+- 推理流程
   - `-b, --batch-size N`: 指定模型在逻辑上一次处理的最大 token 数量。这里的“逻辑”指的是模型内部计算的批次大小，它会影响前向传播时的并行度。
     - 内存紧张时，可降低该值
     - **该值会被用作 KV 缓存分配的上限之一，如果设置过小，可能会导致 KV 缓存碎片化或效率降低**
@@ -177,6 +173,37 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
   - `-ctv, --cache-type-v TYPE`: 设置 `V` 矩阵参数存储位宽
     - **内存紧张，但想要扩充上下文时修改**
     - 建议选项 `q8_0`
+  - `--flash-attn 1`: 一种高效的自注意力实现，通过将注意力计算分块进行，显著减少 GPU 显存访问次数，从而提升推理速度。**某些模型，需要配合 `-ctk`、`-ctv` 一起使用**
+  - `-n, --predict, --n-predict N` : 模型推理生成的 token 数
+    - `-1`: 无限生成，遇到 `STOP` 标记时停止，**默认**
+    - `-2`: 直到上下文总是达到 `--ctx-size` 时停止，遇到 `STOP` 标记不停止，**主要用于测试**
+    - `N` : 最大生成上限，当遇到遇到 `STOP` 标记会提前停止，**最好设置一个上限，防止死循环**
+
+- **重复循环惩罚**
+  - `--repeat-penalty N`: 重复惩罚强度。**降低在一次迭代中，同一 `token` 被重复作为生成结果的概率**
+
+    $$ \text{logit_new} = \text{logit_old} / \text{repeat_penalty} $$
+
+    - `=1.0`: 无惩罚
+    - `>1.0`: 降低 `token` 再次被选中的概率，建议值 `1.05 ~ 1.2`
+    - `<1.0`: 鼓励重复，一般不用
+
+  - `--repeat-last-n N`: 抑制暂时重复。取最近 `N` 个 `token` 进行重复统计，并对这些重复 token 施加惩罚。
+    - `0`: 无惩罚
+    - `-1`: 对所有 `token` 进行检测，最严格
+    - `N`: 建议值 `64`、`128`、`256`、`512`
+  - `--presence-penalty N`: 固定惩罚。阻止主题重复，鼓励引入新词
+    - 建议值 `0.1~0.3`
+
+    $$ logit_new = logit_old - (presence_penalty * (token_count > 0 ? 1 : 0)) $$
+
+  - `--frequency-penalty N` : 抑制长期重复（如重复的大段文字）
+
+    $$ \text{logit_new} = \text{logit_old} - frequency-penalty * token_count $$
+
+    - `=0.0`: 无惩罚
+    - `>0.0`: 惩罚，建议范围 `0.0 ~ 2.0`
+    - `<0.0`: 鼓励重复
 - 操作系统
   - `--mlock`: 降低系统内存切换，可加快推理速度
   - `--no-mmap`: 关闭内存映射，**设置该选项时，建议也同时启用 `--mlock`**
