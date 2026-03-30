@@ -54,6 +54,7 @@ FP16|半精度（未量化）|100%|基准
 [llama.cpp](https://github.com/ggml-org/llama.cpp/tree/master) : 是基于 `c++` 实现的大模型推理框架，性能好，**能在单机上部署轻量模型, 个人用户最佳选择**
 
 - `llama-cli`: 能与`LLM`直接对话的交互式窗口
+- `llama-bench`: 性能测试
 - [llama-completion](https://github.com/ggml-org/llama.cpp/blob/master/tools/completion/README.md): 是 `llama-cli` 的加强版，能进行更复杂的对话设置
 - [llama-server](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md): 启动 `LLM` 服务的工具，支持 `OpenAI`、`Anthropic` 等接口协议
 
@@ -103,6 +104,61 @@ The user has simply said "你好" (Hello) in Chinese. This is a basic greeting. 
 >
 ```
 
+## llama-bench
+
+```term
+triangle@LEARN:~$ .\llama-bench.exe -m ..\DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf  -fa 1
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 16302 MiB):
+  Device 0: NVIDIA GeForce RTX 5070 Ti, compute capability 12.0, VMM: yes, VRAM: 16302 MiB
+load_backend: loaded CUDA backend from D:\Program\llm\llama13\ggml-cuda.dll
+load_backend: loaded RPC backend from D:\Program\llm\llama13\ggml-rpc.dll
+load_backend: loaded CPU backend from D:\Program\llm\llama13\ggml-cpu-haswell.dll
+| model                          |       size |     params | backend    | ngl | fa |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | -: | --------------: | -------------------: |
+| deepseek2 16B Q4_K - Medium    |   9.65 GiB |    15.71 B | CUDA       |  99 |  1 |           pp512 |      2225.56 ± 34.84 |
+| deepseek2 16B Q4_K - Medium    |   9.65 GiB |    15.71 B | CUDA       |  99 |  1 |           tg128 |         91.50 ± 0.49 |
+
+build: 65097181e (8575)
+triangle@LEARN:~$ .\llama-bench.exe --help
+test parameters:
+  -m, --model <filename>                      (default: models/7B/ggml-model-q4_0.gguf)
+  -hf, -hfr, --hf-repo <user>/<model>[:quant] Hugging Face model repository; quant is optional, case-insensitive
+                                              default to Q4_K_M, or falls back to the first file in the repo if Q4_K_M doesn't exist.
+                                              example: ggml-org/GLM-4.7-Flash-GGUF:Q4_K_M
+                                              (default: unused)
+  -hff, --hf-file <file>                      Hugging Face model file. If specified, it will override the quant in --hf-repo
+                                              (default: unused)
+  -hft, --hf-token <token>                    Hugging Face access token
+                                              (default: value from HF_TOKEN environment variable)
+  -p, --n-prompt <n>                          (default: 512)
+  -n, --n-gen <n>                             (default: 128)
+  -pg <pp,tg>                                 (default: )
+  -d, --n-depth <n>                           (default: 0)
+  -b, --batch-size <n>                        (default: 2048)
+  -ub, --ubatch-size <n>                      (default: 512)
+  -ctk, --cache-type-k <t>                    (default: f16)
+  -ctv, --cache-type-v <t>                    (default: f16)
+  -t, --threads <n>                           (default: 8)
+  -C, --cpu-mask <hex,hex>                    (default: 0x0)
+  --cpu-strict <0|1>                          (default: 0)
+  --poll <0...100>                            (default: 50)
+  -ngl, --n-gpu-layers <n>                    (default: 99)
+  -ncmoe, --n-cpu-moe <n>                     (default: 0)
+  -sm, --split-mode <none|layer|row>          (default: layer)
+  -mg, --main-gpu <i>                         (default: 0)
+  -nkvo, --no-kv-offload <0|1>                (default: 0)
+  -fa, --flash-attn <0|1>                     (default: 0)
+  -dev, --device <dev0/dev1/...>              (default: auto)
+  -mmp, --mmap <0|1>                          (default: 1)
+  -dio, --direct-io <0|1>                     (default: 0)
+  -embd, --embeddings <0|1>                   (default: 0)
+  -ts, --tensor-split <ts0/ts1/..>            (default: 0)
+  -ot --override-tensor <tensor name pattern>=<buffer type>;...
+                                              (default: disabled)
+  -nopo, --no-op-offload <0|1>                (default: 0)
+  --no-host <0|1>                             (default: 0)
+```
+
 ## llama-completion
 
 - `-no-cnv, --no-conversation`: 无会话窗口，以命令行的形式执行一次
@@ -147,6 +203,8 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
   - `--rope-scale N`: 如果模型支持 `RoPE` 扩展上下文，则实际上下文长度是 `ctx-size * rope-scale`
 - 参数分配
   - `-ngl, --gpu-layers, --n-gpu-layers N`: CPU 与 GPU 混合使用，在显存中只加载部分模型，剩下的放到内存
+  - `-fit [on|off]`: 自动调节参数适应显存
+  - `-fitt, --fit-target N`: 设置显存保留余量，单位 `MB`
   - `-sm, --split-mode {none,layer,row}`: 控制多 GPU 推理模式
   - `-cmoe, --cpu-moe`: 将专家权重 `MoE(Mixture of Experts)` 全部放到内存中
   - `-ncmoe, --n-cpu-moe N`: 将部分 `MoE(Mixture of Experts)` 全部放到内存中
@@ -167,13 +225,15 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
   - `-ub, --ubatch-size N`: 底层一次送入模型的实际 token 数。**内存紧张的情况，可以降低该值，但推理速度会降低**
     - `GPU` 模式: 采用默认设置即可
     - `CPU` 模式: 内存紧张时，可适当降低到 `256`、`128`
+  - `--cont-batching` : 开启连续批处理，提升推理速度
   - `-ctk, --cache-type-k TYPE`: 设置 `K` 矩阵参数存储位宽
     - **内存紧张，但想要扩充上下文时修改**
     - 建议选项 `q8_0`
   - `-ctv, --cache-type-v TYPE`: 设置 `V` 矩阵参数存储位宽
     - **内存紧张，但想要扩充上下文时修改**
     - 建议选项 `q8_0`
-  - `--flash-attn 1`: 一种高效的自注意力实现，通过将注意力计算分块进行，显著减少 GPU 显存访问次数，从而提升推理速度。**某些模型，需要配合 `-ctk`、`-ctv` 一起使用**
+  - `-kvu, --kv-unified`: 使用统一 `KV` 缓冲区，内存利用更加高效
+  - `-fa, --flash-attn [on|off|auto]`: 一种高效的自注意力实现，通过将注意力计算分块进行，显著减少 GPU 显存访问次数，从而提升推理速度。**某些模型，需要配合 `-ctk`、`-ctv` 一起使用**
   - `-n, --predict, --n-predict N` : 模型推理生成的 token 数
     - `-1`: 无限生成，遇到 `STOP` 标记时停止，**默认**
     - `-2`: 直到上下文总是达到 `--ctx-size` 时停止，遇到 `STOP` 标记不停止，**主要用于测试**
