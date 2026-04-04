@@ -242,7 +242,9 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
 - **重复循环惩罚**
   - `--repeat-penalty N`: 重复惩罚强度。**降低在一次迭代中，同一 `token` 被重复作为生成结果的概率**
 
-    $$ \text{logit_new} = \text{logit_old} / \text{repeat_penalty} $$
+    $$
+      \text{logit\_new} = \text{logit\_old} / \text{repeat\_penalty}
+    $$
 
     - `=1.0`: 无惩罚
     - `>1.0`: 降低 `token` 再次被选中的概率，建议值 `1.05 ~ 1.2`
@@ -255,11 +257,13 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
   - `--presence-penalty N`: 固定惩罚。阻止主题重复，鼓励引入新词
     - 建议值 `0.1~0.3`
 
-    $$ logit_new = logit_old - (presence_penalty * (token_count > 0 ? 1 : 0)) $$
+    $$ 
+        logit_new = logit_old - (presence_penalty * (token_count > 0 ? 1 : 0))
+    $$
 
   - `--frequency-penalty N` : 抑制长期重复（如重复的大段文字）
 
-    $$ \text{logit_new} = \text{logit_old} - frequency-penalty * token_count $$
+    $$ \text{logit\_new} = \text{logit\_old} - frequency-penalty * token_count $$
 
     - `=0.0`: 无惩罚
     - `>0.0`: 惩罚，建议范围 `0.0 ~ 2.0`
