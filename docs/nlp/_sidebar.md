@@ -8,8 +8,9 @@
 - [第三章 数据](./nlp/chapter/data.md)
 - [第四章 大模型工作流](./nlp/chapter/workerflow.md)
 - [第五章 Transformer](./nlp/chapter/transformer.md)
-- [第六章 MCP](./nlp/chapter/mcp.md)
-- [第七章 Agent](./nlp/chapter/agent.md)
-- [第八章 llama.cpp](./nlp/chapter/llama.md)
+- [第六章 MoE](./nlp/chapter/moe.md)
+- [第七章 MCP](./nlp/chapter/mcp.md)
+- [第八章 Agent](./nlp/chapter/agent.md)
+- [第九章 llama.cpp](./nlp/chapter/llama.md)
 
 

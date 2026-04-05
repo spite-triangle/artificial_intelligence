@@ -195,11 +195,17 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
 - `Anthropic` 风格
 - 其他
 
+当启用 `--webui, --no-webui` 时，便能通过 `http://localhost:2223` 访问一个简易对话的 `web` 界面
+
+![alt](../../image/nlp/llama_web.png)
+
+
 ## 通用参数
 
 
 - 模型参数
   - `-c, --ctx-size N` : 设置模型推理的上下文长度，**需要根据机器、模型情况进行估算，设置太长会导致推理降速、卡死**
+    - `-c` 值会影响总的 `KV Cache` 内存大小。内存有限时，需要降低该值
   - `--rope-scale N`: 如果模型支持 `RoPE` 扩展上下文，则实际上下文长度是 `ctx-size * rope-scale`
 - 参数分配
   - `-ngl, --gpu-layers, --n-gpu-layers N`: CPU 与 GPU 混合使用，在显存中只加载部分模型，剩下的放到内存
@@ -225,7 +231,7 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
   - `-ub, --ubatch-size N`: 底层一次送入模型的实际 token 数。**内存紧张的情况，可以降低该值，但推理速度会降低**
     - `GPU` 模式: 采用默认设置即可
     - `CPU` 模式: 内存紧张时，可适当降低到 `256`、`128`
-  - `--cont-batching` : 开启连续批处理，提升推理速度
+
   - `-ctk, --cache-type-k TYPE`: 设置 `K` 矩阵参数存储位宽
     - **内存紧张，但想要扩充上下文时修改**
     - 建议选项 `q8_0`
@@ -238,6 +244,27 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
     - `-1`: 无限生成，遇到 `STOP` 标记时停止，**默认**
     - `-2`: 直到上下文总是达到 `--ctx-size` 时停止，遇到 `STOP` 标记不停止，**主要用于测试**
     - `N` : 最大生成上限，当遇到遇到 `STOP` 标记会提前停止，**最好设置一个上限，防止死循环**
+- 推理思考
+  - `-rea, --reasoning [on|off|auto]`: 是否启动思考模式
+  - `--reasoning-format FORMAT`: 模型思考内容的输出格式
+    - `none`: 思考内容有普通输出一样，都放在 `message.content` 中返回
+    - `deepseek`: 思考内容放在 `message.reasoning_content`
+    - `deepseek-legacy`: 思考内容会通过 `<think></think>`  包裹放在 `message.content` 中，同时也会放到 `message.reasoning_content`
+  - `--reasoning-budget N`: 限定模型用于思考的最大`Token`数量，防止其“过度思考”。**会加快推理速度，但只能可能下降**
+    - `-1`: 无限制
+    - `0`: 禁用
+  - `--reasoning-budget-message MESSAGE`: 在抵达 `--reasoning-budget` 长度限制后，模型就会被迫中断推理。这样的中断操作太过暴力，`--reasoning-budget-message` 的作用便是在中断前给 `LLM` 传递一段 `MESSAGE` 提示词，让中断更自然一些，例如 `请立刻给出最终答案。`
+
+- 并发推理
+  - `-t, --threads N`: 控制生成阶段（逐 `token` 生成）使用的线程数量。**不是越大越好，结合 `GPU` 推理，太大反而降低速度**
+  - `-tb, --threads-batch N`: 控制批处理阶段(输入的 `prompt` 转换为 `token`)使用的线程数量
+  - `--prio-batch N`: 控制批处理阶段线程的调度优先级。**影响的是操作系统`CPU`时间片调度，让响应更快点**
+  - `--cache-prompt, --no-cache-prompt`: 缓存 `prompt` 转换 `token` 的计算结果，避免重复计算。**但是可能造成内存浪费**
+  - `-np, --parallel N`: 服务能同时处理的最大会话数，**该值虽然增加了请求并发数，但是也会导致每个会话可用的上下文减少**
+    - `slot`: 服务中用于隔离请求会话推理的模块，格式由 `-np` 控制
+    - 上下文：每个 `slot` 可用的上下文数量为 `-c / -np`, 即将总上下文数均分给各个 `slot` 使用，**并不是每个 `slot` 都具有 `-c` 大小的上下文**
+  - `--threads-http N`: 处理 `http` 服务请求的线程数
+  - `-cb, --cont-batching, -nocb, --no-cont-batching` : 启用后，服务器才能真正并行地处理多个槽位中的任务
 
 - **重复循环惩罚**
   - `--repeat-penalty N`: 重复惩罚强度。**降低在一次迭代中，同一 `token` 被重复作为生成结果的概率**
