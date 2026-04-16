@@ -2,6 +2,23 @@
 
 # 概念
 
+## 介绍
+
+[llama.cpp](https://github.com/ggml-org/llama.cpp/tree/master) : 是基于 `c++` 实现的大模型推理框架，性能好，**能在单机上部署轻量模型, 个人用户最佳选择**
+
+- `llama-cli`: 能与`LLM`直接对话的交互式窗口
+- `llama-bench`: 性能测试
+- [llama-completion](https://github.com/ggml-org/llama.cpp/blob/master/tools/completion/README.md): 是 `llama-cli` 的加强版，能进行更复杂的对话设置
+- [llama-server](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md): 启动 `LLM` 服务的工具，支持 `OpenAI`、`Anthropic` 等接口协议
+
+**`llama.cpp` 只支持 `GGUF` 格式的模型**，模型下载仓库
+- [modelscope](https://www.modelscope.cn/home)
+- [Hugging face hub](https://huggingface.co/models)
+
+`llama.cpp` 自带一个前端 `web UI`，但是功能较弱，推荐使用
+- [vscode](https://code.visualstudio.com/): 相关插件更好用
+- [cherry studio](https://www.cherry-ai.com/)
+
 ## 参数
 
 - **参数尺寸**
@@ -10,23 +27,23 @@
 
 - **保存格式**
 
-格式|核心特点|主要运行框架|典型适用场景
+|格式|核心特点|主要运行框架|典型适用场景|
 |-|-|-|-|
-GGUF|单文件内嵌元数据，支持多种量化（Q4_K_M等），CPU优先，内存映射加载|llama.cpp、Ollama、LM Studio、llama-cpp-python|本地CPU推理、边缘设备、桌面应用
-GPTQ|4-bit量化，需校准数据集，显存友好|AutoGPTQ、vLLM、ExLlamaV2、TGI、Hugging Face Transformers (auto-gptq)|单卡/多卡GPU服务端部署
-AWQ|4-bit量化，保护重要权重，精度损失小|AutoAWQ、vLLM、TGI、Hugging Face Transformers (autoawq)|GPU推理，高质量低显存占用
-EXL2|ExLlamaV2专用格式，支持混合精度（2~6 bit），性能极致|ExLlamaV2|高性能GPU推理，对速度要求极高
-ONNX|开放神经网络交换格式，算子级优化，跨框架|ONNX Runtime (CPU/CUDA/TensorRT后端)|跨平台部署、硬件加速（Intel、NVIDIA）
-TensorRT|NVIDIA专用格式，深度融合GPU优化，推理速度最快|TensorRT-LLM、NVIDIA Triton Inference Server|NVIDIA GPU生产环境，极致吞吐与低延迟
-OpenVINO|Intel硬件专用格式，CPU/GPU/VPU深度优化|OpenVINO Runtime|Intel CPU/GPU边缘端与服务器部署
-Core ML|Apple生态专用，iOS/macOS设备原生推理|Core ML Tools、mlx间接支持|iPhone、iPad、Mac应用内推理
-MLX|Apple Silicon专用NumPy式数组框架，直接加载Safetensors|MLX、mlx-lm|Mac本地开发、推理与微调
-Safetensors|安全张量存储（无pickle），单文件或多分片，Hugging Face默认格式|Hugging Face Transformers、vLLM、TGI、多数PyTorch推理库|模型训练、微调、开发调试、通用推理
-PyTorch Bin|传统pickle格式，与Safetensors并存|PyTorch、Hugging Face Transformers|旧模型兼容、快速实验
-Flax / JAX|Google生态，用于TPU训练与推理|Hugging Face Transformers (Flax)、JAX|TPU训练、Google Cloud部署
-TFLite|TensorFlow Lite格式，轻量化移动端推理|TensorFlow Lite Interpreter|Android、iOS、嵌入式设备
-ONNX Runtime Mobile|ONNX移动端版本，轻量高效|ONNX Runtime Mobile|移动设备跨平台推理
-WebLLM / MLC格式|转换为WebGPU可运行的格式，浏览器内推理|WebLLM、MLC-LLM|Web端大模型应用，无需后端
+|GGUF|单文件内嵌元数据，支持多种量化（Q4_K_M等），CPU优先，内存映射加载|llama.cpp、Ollama、LM Studio、llama-cpp-python|本地CPU推理、边缘设备、桌面应用|
+|GPTQ|4-bit量化，需校准数据集，显存友好|AutoGPTQ、vLLM、ExLlamaV2、TGI、Hugging Face Transformers (auto-gptq)|单卡/多卡GPU服务端部署|
+|AWQ|4-bit量化，保护重要权重，精度损失小|AutoAWQ、vLLM、TGI、Hugging Face Transformers (autoawq)|GPU推理，高质量低显存占用|
+|EXL2|ExLlamaV2专用格式，支持混合精度（2~6 bit），性能极致|ExLlamaV2|高性能GPU推理，对速度要求极高|
+|ONNX|开放神经网络交换格式，算子级优化，跨框架|ONNX Runtime (CPU/CUDA/TensorRT后端)|跨平台部署、硬件加速（Intel、NVIDIA）|
+|TensorRT|NVIDIA专用格式，深度融合GPU优化，推理速度最快|TensorRT-LLM、NVIDIA Triton Inference Server|NVIDIA GPU生产环境，极致吞吐与低延迟|
+|OpenVINO|Intel硬件专用格式，CPU/GPU/VPU深度优化|OpenVINO Runtime|Intel CPU/GPU边缘端与服务器部署|
+|Core ML|Apple生态专用，iOS/macOS设备原生推理|Core ML Tools、mlx间接支持|iPhone、iPad、Mac应用内推理|
+|MLX|Apple Silicon专用NumPy式数组框架，直接加载Safetensors|MLX、mlx-lm|Mac本地开发、推理与微调|
+|Safetensors|安全张量存储（无pickle），单文件或多分片，Hugging Face默认格式|Hugging Face Transformers、vLLM、TGI、多数PyTorch推理库|模型训练、微调、开发调试、通用推理|
+|PyTorch Bin|传统pickle格式，与Safetensors并存|PyTorch、Hugging Face Transformers|旧模型兼容、快速实验|
+|Flax / JAX|Google生态，用于TPU训练与推理|Hugging Face Transformers (Flax)、JAX|TPU训练、Google Cloud部署|
+|TFLite|TensorFlow Lite格式，轻量化移动端推理|TensorFlow Lite Interpreter|Android、iOS、嵌入式设备|
+|ONNX Runtime Mobile|ONNX移动端版本，轻量高效|ONNX Runtime Mobile|移动设备跨平台推理|
+|WebLLM / MLC格式|转换为WebGPU可运行的格式，浏览器内推理|WebLLM、MLC-LLM|Web端大模型应用，无需后端|
 
 > [!tip]
 > - `vllm`: 团队部署最佳选择
@@ -47,20 +64,8 @@ Q8_0|8-bit 量化|~50%|极高
 FP16|半精度（未量化）|100%|基准
 
 
-# llama.cpp
+# CLI
 
-## 介绍
-
-[llama.cpp](https://github.com/ggml-org/llama.cpp/tree/master) : 是基于 `c++` 实现的大模型推理框架，性能好，**能在单机上部署轻量模型, 个人用户最佳选择**
-
-- `llama-cli`: 能与`LLM`直接对话的交互式窗口
-- `llama-bench`: 性能测试
-- [llama-completion](https://github.com/ggml-org/llama.cpp/blob/master/tools/completion/README.md): 是 `llama-cli` 的加强版，能进行更复杂的对话设置
-- [llama-server](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md): 启动 `LLM` 服务的工具，支持 `OpenAI`、`Anthropic` 等接口协议
-
-**`llama.cpp` 只支持 `GGUF` 格式的模型**
-- [modelscope](https://www.modelscope.cn/home)
-- [Hugging face hub](https://huggingface.co/models)
 
 ## llama-cli
 
@@ -199,8 +204,27 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
 
 ![alt](../../image/nlp/llama_web.png)
 
+# 多模态
 
-## 通用参数
+`llama.cpp` 中的多模态支持是通过**独立模型组件 `libmtmd` 将多模态数据转换为文本模型的输入**，这种设计将多模态组件 `libmtmd` 与核心的 `libllama` 库分离开来。因此，运行多模态模型通常需要两个 `GGUF` 文件：
+- **文本模型**： 常规语言处理模型
+- **多模态模型**: 负责处理多模态数据的编码与投影。
+  - **编码**：将多模态数据转换为嵌入向量`embeddings`
+  - **投影**: 将编码后的嵌入向量转换为文本模型能理解的输入
+
+> [!note]
+> - 原始模型`GGUF`化后会被分解为「文本模型」与 「多模态模型」两个 `GGUF` 文件，因此，**多模态模型与文本模型必须出自同一量化流程，不同的量化流程得到的模型不能混用**
+> - 搜索模型时，要加上 `vision` 就能搜索到带有视觉处理的模型
+
+
+```term
+triangle@LEARN:~$ .\llama-server.exe -m Qwen3.5-9B-vision.Q4_K_M.gguf -mm Qwen3.5-9B-vision\mmproj-Qwen3.5-9B.BF16.gguf
+Option
+    -m                文本模型 GGUF
+    -mm               多模态模型 GGUF
+```
+
+# 通用参数
 
 
 - 模型参数
@@ -215,6 +239,7 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
   - `-cmoe, --cpu-moe`: 将专家权重 `MoE(Mixture of Experts)` 全部放到内存中
   - `-ncmoe, --n-cpu-moe N`: 将部分 `MoE(Mixture of Experts)` 全部放到内存中
   - `-ot, --override-tensor <tensor name pattern>=<buffer type>,..`: 使用表达式更加精细化控制
+  - `--mmproj-offload, --no-mmproj-offload`: 是否将多模态模型放入 `GPU`
 
     ```term
     triangle@LEARN:~$ // 所有专家层（exps）放到CPU，其余（默认）放GPU
@@ -285,12 +310,12 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
     - 建议值 `0.1~0.3`
 
     $$ 
-        logit_new = logit_old - (presence_penalty * (token_count > 0 ? 1 : 0))
+        \text{logit\_new} = \text{logit\_old} - (\text{presence\_penalty} * (\text{token\_count} > 0 ? 1 : 0))
     $$
 
   - `--frequency-penalty N` : 抑制长期重复（如重复的大段文字）
 
-    $$ \text{logit\_new} = \text{logit\_old} - frequency-penalty * token_count $$
+    $$ \text{logit\_new} = \text{logit\_old} - \text{frequency\_penalty} * \text{token\_count}  $$
 
     - `=0.0`: 无惩罚
     - `>0.0`: 惩罚，建议范围 `0.0 ~ 2.0`
@@ -298,3 +323,10 @@ triangle@LEARN:~$ ./llama-server -m  Qwen3.5-4B.Q5_K_S.gguf --host 0.0.0.0 --por
 - 操作系统
   - `--mlock`: 降低系统内存切换，可加快推理速度
   - `--no-mmap`: 关闭内存映射，**设置该选项时，建议也同时启用 `--mlock`**
+- 网络服务
+  - `--webui, --no-webui`: 开启简易的 `web` 聊天界面
+  - `--webui-mcp-proxy`: 启动跨域访问能力，`web` 聊天界面能使用 `MCP server` 
+
+
+
+
