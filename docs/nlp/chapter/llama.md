@@ -224,8 +224,9 @@ Option
     -mm               多模态模型 GGUF
 ```
 
-# 通用参数
+# 参数配置
 
+## 通用参数
 
 - 模型参数
   - `-c, --ctx-size N` : 设置模型推理的上下文长度，**需要根据机器、模型情况进行估算，设置太长会导致推理降速、卡死**
@@ -279,7 +280,6 @@ Option
     - `-1`: 无限制
     - `0`: 禁用
   - `--reasoning-budget-message MESSAGE`: 在抵达 `--reasoning-budget` 长度限制后，模型就会被迫中断推理。这样的中断操作太过暴力，`--reasoning-budget-message` 的作用便是在中断前给 `LLM` 传递一段 `MESSAGE` 提示词，让中断更自然一些，例如 `请立刻给出最终答案。`
-
 - 并发推理
   - `-t, --threads N`: 控制生成阶段（逐 `token` 生成）使用的线程数量。**不是越大越好，结合 `GPU` 推理，太大反而降低速度**
   - `-tb, --threads-batch N`: 控制批处理阶段(输入的 `prompt` 转换为 `token`)使用的线程数量
@@ -290,42 +290,113 @@ Option
     - 上下文：每个 `slot` 可用的上下文数量为 `-c / -np`, 即将总上下文数均分给各个 `slot` 使用，**并不是每个 `slot` 都具有 `-c` 大小的上下文**
   - `--threads-http N`: 处理 `http` 服务请求的线程数
   - `-cb, --cont-batching, -nocb, --no-cont-batching` : 启用后，服务器才能真正并行地处理多个槽位中的任务
-
-- **重复循环惩罚**
-  - `--repeat-penalty N`: 重复惩罚强度。**降低在一次迭代中，同一 `token` 被重复作为生成结果的概率**
-
-    $$
-      \text{logit\_new} = \text{logit\_old} / \text{repeat\_penalty}
-    $$
-
-    - `=1.0`: 无惩罚
-    - `>1.0`: 降低 `token` 再次被选中的概率，建议值 `1.05 ~ 1.2`
-    - `<1.0`: 鼓励重复，一般不用
-
-  - `--repeat-last-n N`: 抑制暂时重复。取最近 `N` 个 `token` 进行重复统计，并对这些重复 token 施加惩罚。
-    - `0`: 无惩罚
-    - `-1`: 对所有 `token` 进行检测，最严格
-    - `N`: 建议值 `64`、`128`、`256`、`512`
-  - `--presence-penalty N`: 固定惩罚。阻止主题重复，鼓励引入新词
-    - 建议值 `0.1~0.3`
-
-    $$ 
-        \text{logit\_new} = \text{logit\_old} - (\text{presence\_penalty} * (\text{token\_count} > 0 ? 1 : 0))
-    $$
-
-  - `--frequency-penalty N` : 抑制长期重复（如重复的大段文字）
-
-    $$ \text{logit\_new} = \text{logit\_old} - \text{frequency\_penalty} * \text{token\_count}  $$
-
-    - `=0.0`: 无惩罚
-    - `>0.0`: 惩罚，建议范围 `0.0 ~ 2.0`
-    - `<0.0`: 鼓励重复
 - 操作系统
   - `--mlock`: 降低系统内存切换，可加快推理速度
   - `--no-mmap`: 关闭内存映射，**设置该选项时，建议也同时启用 `--mlock`**
 - 网络服务
   - `--webui, --no-webui`: 开启简易的 `web` 聊天界面
   - `--webui-mcp-proxy`: 启动跨域访问能力，`web` 聊天界面能使用 `MCP server` 
+
+
+
+## 重复循环惩罚
+
+由于模型经过量化处理，推理质量损失，就很有可能会进入推理死循环，一直重复输出某段内容。针对该问题，就需要给模型添加重复惩罚
+
+- `--repeat-penalty N`: 重复惩罚强度。**降低在一次迭代中，同一 `token` 被重复作为生成结果的概率**
+
+  $$
+    \text{logit\_new} = \text{logit\_old} / \text{repeat\_penalty}
+  $$
+
+  - `=1.0`: 无惩罚
+  - `>1.0`: 降低 `token` 再次被选中的概率，建议值 `1.05 ~ 1.2`
+  - `<1.0`: 鼓励重复，一般不用
+
+- `--repeat-last-n N`: 抑制暂时重复。取最近 `N` 个 `token` 进行重复统计，并对这些重复 token 施加惩罚。
+  - `0`: 无惩罚
+  - `-1`: 对所有 `token` 进行检测，最严格
+  - `N`: 建议值 `64`、`128`、`256`、`512`
+- `--presence-penalty N`: 固定惩罚。阻止主题重复，鼓励引入新词
+  - 建议值 `0.1~0.3`
+
+  $$ 
+      \text{logit\_new} = \text{logit\_old} - (\text{presence\_penalty} * (\text{token\_count} > 0 ? 1 : 0))
+  $$
+
+- `--frequency-penalty N` : 抑制长期重复（如重复的大段文字）
+
+  $$ \text{logit\_new} = \text{logit\_old} - \text{frequency\_penalty} * \text{token\_count}  $$
+
+  - `=0.0`: 无惩罚
+  - `>0.0`: 惩罚，建议范围 `0.0 ~ 2.0`
+  - `<0.0`: 鼓励重复
+
+## 推测性解码
+
+**推测性解码`speculative decoding`**：通过一个“草稿”机制，提前预测接下来的多个`token`，然后将预测结果一次性提交给主模型进行并行验证。由于模型验证一批`token`与生成一个`token`的计算耗时相差不大，一旦预测准确，就能在单次推理中生成多个`token`，从而显著提升文本的生成速度。
+- `N-gram`: 通过算法实现预测
+- `model-draft`: 通过草稿模型实现预测
+
+### N-gram
+
+在语言模型中，`N-gram` 指的是文本中连续出现的 `N` 个词元 `token` 组成的片段，例如
+- `1-gram (unigram)`：单个 token，如 “今天”
+- `2-gram (bigram)`：两个连续 token，如 “今天” “天气”
+- `3-gram (trigram)`：三个连续 token，如 “今天” “天气” “真好”
+
+`N-gram` 推测解码步骤为
+1. 构建查询 `Lookup`: 取当前生成文本的末尾 `N` 个 `token`，把它当作一个「查询指纹」，即一个 `N-gram`
+2. 搜索匹配 `Match`: 拿着这个 `N-gram` 反向扫描历史文本，找到上一次出现完全相同 `N-gram` 的地方
+3. 生成草稿 `Draft`: 读取历史上紧跟在那个 `N-gram` 后面的 `M` 个 `token`，把它们直接“抄过来”作为预测草稿
+4. 预测验证 `Verify`: 将得到的 `M` 历史个 `token` 提交给大模型进行验证，验证通过就采用，失败就丢弃
+
+>[!note]
+> `N-gram` 只适用于「模式重复场景」，即 `LLM` 接下来要生成的内容会大量出现前面已经出现过的固定短语、行话或代码块
+> - 非常适合：代码生成与重构、翻译任务、固定格式的文档输出、复述文档、角色扮演
+> - 效果一般: 通用问答、百科解释
+> - 不能使用：文学创作、高度随机的开放式任务，即需要设置高 `temperature`、`top_p` 的任务
+
+参数配置
+
+- `--spec-type`: 推测解码类型
+
+  |选项|描述|实现机制|适用场景与说明|
+  |-|-|-|-|
+  |`none`|默认值，不启用任何推测性解码。|使用标准的逐token生成策略。所有模型对所有内容都适用。|处理随机性高、模式不重复的文本，例如文学创作|
+  |`ngram-simple`|简单的N-gram反向查找 (Simple Lookup)。|在最近生成的文本中反向线性查找，寻找最近出现的n-gram匹配，并将历史中紧随其后的token作为“草稿”。|适合模式变化不剧烈、局部重复性较高的场景，如回答结构相似的问题。|
+  |`ngram-cache`|基于缓存的N-gram查找 (Cache-Based)。|维护一个动态更新的N-gram缓存，记录token序列及其后续token。预测时从缓存中查找最佳匹配。编译时需开启特定选项如`LLAMA_NGRAM_CACHE=1`。|查找更智能，命中率更高。适用于对性能有极致要求、有固定领域语料（如客服机器人）的场景，可利用预热脚本获得最大加速。|
+  |`ngram-map-k`|基于哈希映射的N-gram查找 - 变体K。|使用哈希表高效查找匹配。此变体用于管理“Key”序列。|搜索速度比线性搜索更快。一种用户反馈中针对代码修改初稿显示出极佳的速度提升效果（尽管结果可能有差异）的配置。|
+  |`ngram-map-k4v`|基于哈希映射的N-gram查找 - 变体V。|此变体用于定义哈希表中与“Key”关联的“Value”（即要预测的草稿序列）的数量或模式。|更精细地控制“记忆”和“预测”行为，但通常需要根据具体任务进行更谨慎的参数调优。|
+  |`ngram-mod`|混合专家模型 |专门针对采用**混合专家 `MoE`**架构的模型进行优化。|特别适合 `MoE` 模型和代码重构等结构性强的任务，是当前社区使用较多的推荐选项。|
+
+- `--spec-ngram-size-n N`: 针对 `ngram-simple/ngram-map` 用于 `n-gram` 中 `N` 的大小
+- `--spec-ngram-size-m M`: 针对 `ngram-simple/ngram-map` 用于 `n-gram` 中 `M` 的大小
+- `--spec-ngram-min-hits H`: 控制着一个 `N-gram` 片段需要“出现过多少次”，才有资格用来预测后续内容。通常 `N` 与 `M` 比较大时，`H` 就要设置小
+- `--draft-min N`: 当 `M < --draft-min`时，不满足进行模型验证的 `token` 数，系统会通过算法动态追加 `token`，使得预测`token`数达到 `--draft-min`
+- `--draft-max N`: 预测 `token` 数超过了 `--draft-max`，系统会接入进行 `token` 缩减
+
+
+### model-draft
+
+使用「草稿模型」代替 `N-gram` 算法预测 `N-gram` 片段，然后让主模型来判断预测结果是否准确
+- `--model-draft FNAME`: 设置草稿模型，**草稿模型要与主模型的`Tokenizer`完全相同**，例如 `Qwen2.5-0.5B` 与 `Qwen2.5-8B`
+- `--spec-replace TARGET DRAFT`: 当草稿模型与主模型不匹配时，可以手动矫正 `Tokenizer` 中的 `token ID`，允许指定多条
+- `--draft-min N`: 当 `M < --draft-min`时，不满足进行模型验证的 `token` 数，系统会通过算法动态追加 `token`，使得预测`token`数达到 `--draft-min`
+- `--draft-max N`: 预测 `token` 数超过了 `--draft-max`，系统会接入进行 `token` 缩减
+
+### DFlash
+
+`DFlash`: 对 `model-draft` 方式的改进。**利用扩散模型`Diffusion Model`替代自回归模型`Autoregressive, AR`充当草稿模型，实现了一次性并行生成一整块`Block`候选词元**
+- 自回归模型`Autoregressive, AR`: 传统大模型结构，生成一组 `token` 得重复推理多次逐 `token` 生成
+- 扩散模型 `Diffusion Model`: 仅需单次前向传播，即可并行生成一整组 `token`
+
+**但是 `DFlash` 需要提前训练一个与主模型配对的专用草稿模型。没有`model-draft`方式简单，只要`Tokenizer`相同就能跑**
+
+> [!note]
+> - 在 [Hugging face hub](https://huggingface.co/models) 上，已经存在 `Qwen3.6 27B` 配套 `DFlash` 模型
+> - `llama.cpp` 官方版本并未支持 `dflash` ，只能用魔改版
+
 
 
 
