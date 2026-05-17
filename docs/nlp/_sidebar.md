@@ -11,6 +11,7 @@
 - [第六章 MoE](./nlp/chapter/moe.md)
 - [第七章 MCP](./nlp/chapter/mcp.md)
 - [第八章 Agent](./nlp/chapter/agent.md)
-- [第九章 llama.cpp](./nlp/chapter/llama.md)
+- [第九章 Kits](./nlp/chapter/kits.md)
+- [第十章 llama.cpp](./nlp/chapter/llama.md)
 
 
